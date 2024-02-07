@@ -44,7 +44,6 @@ import (
   "fmt"
 	"math/rand"
 	"time"
-  "math"
   "mlgo/ml"
   "os"
 )
