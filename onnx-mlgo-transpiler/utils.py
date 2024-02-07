@@ -1,11 +1,11 @@
-def create_model_type():
+def create_model_type(file):
   pass
 
-def create_weight_loading_func():
+def create_weight_loading_func(file):
   pass
 
-def create_eval_func():
+def create_eval_func(file):
   pass
 
-def create_main_func():
+def create_main_func(file):
   pass
