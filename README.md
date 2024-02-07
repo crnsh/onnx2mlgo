@@ -1,4 +1,10 @@
-# ONNX to MLGO Transpiler
+# MLGO
+
+MLGO is tensor library for machine learning in pure Golang that can run on MIPS.
+
+The machine learning part of this project refers to the legendary [ggml.cpp](https://github.com/ggerganov/ggml) framework.
+
+## ONNX to MLGO Transpiler
 
 Compiles ONNX to MLGO.
 
@@ -6,13 +12,6 @@ Located in `onnx-mlgo-transpiler`.
 
 1. `cd onnx-mlgo-transpiler`
 2. `python3 transpiler.py`
-
-# MLGO
-
-MLGO is tensor library for machine learning in pure Golang that can run on MIPS.
-
-The machine learning part of this project refers to the legendary [ggml.cpp](https://github.com/ggerganov/ggml) framework.
-
 
 ## Build
 
