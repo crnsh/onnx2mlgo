@@ -14,10 +14,10 @@ import (
 """
   )
 
-def create_hparams_type(file):
+def create_hparams_type(file, name: str):
   # TODO: is this correct? are any variables required here?
   file.write(f"""\
-type mnist_hparams struct{{
+type {name}_hparams struct{{
   n_input int32;
   n_hidden int32;
   n_classes int32;

@@ -3,13 +3,13 @@ import utils
 def read_from_onnx():
   pass
 
-def transpile(onnx):
+def transpile(onnx, model_name):
   with open('test.go', 'w') as file:
     # imports and boilerplate
     utils.create_go_boilerplate(file)
 
     # type mnist_hparams
-    utils.create_hparams_type(file)
+    utils.create_hparams_type(file, model_name)
     
     # type mnist_model
     utils.create_model_type(file)
