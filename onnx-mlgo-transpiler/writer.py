@@ -27,15 +27,21 @@ type {name}_hparams struct{{
   )
 
 def create_model_type(file, model_name: str):
+
+  # TODO: change these depending on the model weights and layers
+  layers = """\
+  fc1_weight *ml.Tensor;
+  fc1_bias *ml.Tensor;
+
+  fc2_weight *ml.Tensor;
+  fc2_bias *ml.Tensor;
+  """
+
   file.write(f"""\
 type mnist_model struct {{
-	hparams {name}_hparams;
+  hparams {name}_hparams;
 
-	fc1_weight *ml.Tensor;
-	fc1_bias *ml.Tensor;
-
-	fc2_weight *ml.Tensor;
-	fc2_bias *ml.Tensor;
+{layers}
 
 }}
 
