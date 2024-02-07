@@ -1,3 +1,6 @@
+def create_hparams_type(file):
+  pass
+
 def create_model_type(file):
   pass
 

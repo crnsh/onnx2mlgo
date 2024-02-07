@@ -4,7 +4,10 @@ def read_from_onnx():
   pass
 
 def transpile(onnx):
-  with open('test.go', 'w') as file:    
+  with open('test.go', 'w') as file:
+    # type mnist_hparams
+    utils.create_hparams_type(file)
+    
     # type mnist_model
     utils.create_model_type(file)
 
@@ -13,7 +16,7 @@ def transpile(onnx):
 
     # func mnist_eval
     utils.create_eval_func(file)
-    
+
     # func TestMNIST
     utils.create_main_func(file)
   
