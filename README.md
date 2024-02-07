@@ -4,6 +4,9 @@ Compiles ONNX to MLGO.
 
 Located in `onnx-mlgo-transpiler`.
 
+1. `cd onnx-mlgo-transpiler`
+2. `python3 transpiler.py`
+
 # MLGO
 
 MLGO is tensor library for machine learning in pure Golang that can run on MIPS.
