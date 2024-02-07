@@ -17,7 +17,7 @@ import (
 def create_hparams_type(file, model_name: str):
   # TODO: is this correct? are any variables required here?
   file.write(f"""\
-type {name}_hparams struct{{
+type {model_name}_hparams struct{{
   n_input int32;
   n_hidden int32;
   n_classes int32;
@@ -38,8 +38,8 @@ def create_model_type(file, model_name: str):
   """
 
   file.write(f"""\
-type mnist_model struct {{
-  hparams {name}_hparams;
+type {model_name}_model struct {{
+  hparams {model_name}_hparams;
 
 {layers}
 
