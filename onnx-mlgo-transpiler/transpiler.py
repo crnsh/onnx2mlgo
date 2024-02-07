@@ -5,6 +5,9 @@ def read_from_onnx():
 
 def transpile(onnx):
   with open('test.go', 'w') as file:
+    # imports and boilerplate
+    utils.create_go_boilerplate(file)
+
     # type mnist_hparams
     utils.create_hparams_type(file)
     

@@ -1,11 +1,25 @@
-def create_hparams_type(file):
-  file.write(
+def create_go_boilerplate(file):
+  file.write("""\
+package main
+
+import (
+  "errors"
+  "fmt"
+  "math"
+  "mlgo/ml"
+  "os"
+)
 """
+  )
+
+def create_hparams_type(file):
+  file.write("""\
 type mnist_hparams struct{
   n_input int32;
   n_hidden int32;
   n_classes int32;
-}"""
+}
+"""
   )
 
 def create_model_type(file):
