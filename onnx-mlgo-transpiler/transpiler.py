@@ -14,6 +14,7 @@ def transpile(onnx, model_name):
   utils_path.mkdir(parents=True, exist_ok=True)
   mlgo_model_path.mkdir(parents=True, exist_ok=True)
 
+  # Transpilation Begins
   with open(utils_path / 'utils.go', 'w') as file:
     writer.create_model_utils(file)
 
