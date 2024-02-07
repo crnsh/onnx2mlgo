@@ -6,6 +6,11 @@ def create_model_utils(file):
 """\
 package utils
 
+import (
+	"math"
+	"os"
+)
+
 func readFP32(file *os.File) float32 {
   buf := make([]byte, 4)
   if count, err := file.Read(buf); err != nil || count != 4 {
@@ -37,6 +42,8 @@ import (
   "errors"
   "utils"
   "fmt"
+	"math/rand"
+	"time"
   "math"
   "mlgo/ml"
   "os"
@@ -175,16 +182,111 @@ func {model_name}_model_load(fname string, model *{model_name}_model) error {{
 """
   )
 
-def create_eval_func(file):
+def create_eval_func(file, model_name: str):
   """
   create function to evaluate model
   e.g. - mnist_eval
   """
-  pass
 
-def create_main_func(file):
+  # TODO: create input tensor according to onnx
+  # TODO: create fc's (layers) according to onnx
+
+  file.write(
+  f"""
+func {model_name}_eval(model *{model_name}_model, threadCount int, digit []float32) int {{
+
+	ctx0 := &ml.Context{{}}
+	graph := ml.Graph{{ThreadsCount: threadCount}}
+
+	input := ml.NewTensor1D(ctx0, ml.TYPE_F32, uint32(model.hparams.n_input))
+	copy(input.Data, digit)
+
+	// fc1 MLP = Ax + b
+	fc1 := ml.Add(ctx0, ml.MulMat(ctx0, model.fc1_weight, input), model.fc1_bias)
+	fc2 := ml.Add(ctx0, ml.MulMat(ctx0, model.fc2_weight, ml.Relu(ctx0, fc1)), model.fc2_bias)
+
+	// softmax
+	final := ml.SoftMax(ctx0, fc2)
+
+	// run the computation
+	ml.BuildForwardExpand(&graph, final)
+	ml.GraphCompute(ctx0, &graph)
+
+	ml.printTensor(final, "final tensor")
+
+	maxIndex := 0
+	for i := 0; i < 10; i++{{
+		if final.Data[i] > final.Data[maxIndex] {{
+			maxIndex = i
+		}}
+	}}
+	return maxIndex
+}}
+  """
+  )
+
+def create_main_func(file, model_name: str):
   """
   create inference main function
   e.g. TestMNIST 
   """
-  pass
+
+  # TODO: decide which variables need to be here based on onnx
+
+
+  # TODO: decide what to do with ml.SINGLE_THREAD
+
+
+  modelFile = "models/mnist/ggml-model-f32.bin"
+  digitFile = "models/mnist/t10k-images.idx3-ubyte"
+
+  file.write(
+f"""\
+func main() {{
+	modelFile := "{modelFile}"
+	digitFile := "{digitFile}"
+
+	ml.SINGLE_THREAD = true
+	model := new({model_name}_model)
+	if err := {model_name}_model_load(modelFile, model); err != nil {{
+		fmt.Println(err)
+		return
+	}}
+
+	// load a random test digit
+	fin, err := os.Open(digitFile)
+	if err != nil {{
+		fmt.Println(err)
+		return
+	}}
+	 // Seek to a random digit: 16-byte header + 28*28 * (random 0 - 10000)
+	rand.Seed(time.Now().UnixNano())
+	fin.Seek(int64(16 + 784 * (rand.Int() % 10000)), 0)
+	buf := make([]byte, 784)
+	digits := make([]float32, 784)
+	if count, err := fin.Read(buf); err != nil || count != int(len(buf)) {{
+		fmt.Println(err, count)
+		return
+	}}
+
+	// render the digit in ASCII
+	for row := 0; row < 28; row++{{
+		for col := 0; col < 28; col++ {{
+			digits[row*28 + col] = float32(buf[row*28 + col])
+			var c string
+			if buf[row*28 + col] > 230 {{
+				c = "*"
+			}} else {{
+				c = "_"
+			}}
+			fmt.Printf(c)
+		}}
+		fmt.Println("")
+	}}
+	fmt.Println("")
+
+	res := {model_name}_eval(model, 1, digits)
+	fmt.Println("Predicted digit is ", res)
+}}
+"""
+  )
