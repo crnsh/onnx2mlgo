@@ -26,6 +26,6 @@ def transpile(onnx, model_name):
 
 def main():
   onnx_output = read_from_onnx()
-  transpile(onnx_output)
+  transpile(onnx_output, 'mnist')
   
 main()

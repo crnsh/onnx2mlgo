@@ -27,24 +27,24 @@ type {model_name}_hparams struct{{
   )
 
 def create_model_type(file, model_name: str):
-
+  # TODO: in the transpilation, abstract the logic from the string manipulation output
   # TODO: change these depending on the model weights and layers
   layers = """\
   fc1_weight *ml.Tensor;
   fc1_bias *ml.Tensor;
 
   fc2_weight *ml.Tensor;
-  fc2_bias *ml.Tensor;
+  fc2_bias *ml.Tensor;\
   """
 
   file.write(f"""\
 type {model_name}_model struct {{
+
   hparams {model_name}_hparams;
 
 {layers}
 
 }}
-
 """
   )
 
