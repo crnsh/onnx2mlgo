@@ -137,7 +137,7 @@ func {model_name}_model_load(fname string, model *{model_name}_model) error {{
     for i := 0; i < len(model.fc2_bias.Data); i++ {{
       model.fc2_bias.Data[i] = readFP32(file)
     }}
-    printTensor(model.fc2_bias, "model.fc2_bias")
+    ml.printTensor(model.fc2_bias, "model.fc2_bias")
 
   }}
 
