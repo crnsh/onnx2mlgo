@@ -14,7 +14,7 @@ import (
 """
   )
 
-def create_hparams_type(file, name: str):
+def create_hparams_type(file, model_name: str):
   # TODO: is this correct? are any variables required here?
   file.write(f"""\
 type {name}_hparams struct{{
@@ -26,8 +26,21 @@ type {name}_hparams struct{{
 """
   )
 
-def create_model_type(file):
-  pass
+def create_model_type(file, model_name: str):
+  file.write(f"""\
+type mnist_model struct {{
+	hparams {name}_hparams;
+
+	fc1_weight *ml.Tensor;
+	fc1_bias *ml.Tensor;
+
+	fc2_weight *ml.Tensor;
+	fc2_bias *ml.Tensor;
+
+}}
+
+"""
+  )
 
 def create_weight_loading_func(file):
   pass
