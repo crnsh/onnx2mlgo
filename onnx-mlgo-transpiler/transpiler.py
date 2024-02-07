@@ -4,6 +4,11 @@ def read_from_onnx():
   pass
 
 def transpile(onnx, model_name):
+  # TODO: make sure that model_name is a valid file_name
+
+  with open(f'utils.go', 'w') as file:
+    writer.create_model_utils(file)
+
   with open('test.go', 'w') as file:
     writer.create_go_boilerplate(file)
     writer.create_hparams_type(file, model_name)

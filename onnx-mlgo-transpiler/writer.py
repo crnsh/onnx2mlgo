@@ -1,3 +1,30 @@
+def create_model_utils(file):
+  """
+  create model utils.
+  """
+  file.write(
+"""\
+package utils
+
+func readFP32(file *os.File) float32 {
+  buf := make([]byte, 4)
+  if count, err := file.Read(buf); err != nil || count != 4 {
+    return 0.0
+  }
+  bits := uint32(buf[3])<<24 | uint32(buf[2])<<16 | uint32(buf[1])<<8 | uint32(buf[0])
+  return math.Float32frombits(bits)
+}
+
+func readInt(file *os.File) uint32 {
+  buf := make([]byte, 4)
+  if count, err := file.Read(buf); err != nil || count != 4 {
+    return 0
+  }
+  return uint32(buf[3])<<24 | uint32(buf[2])<<16 | uint32(buf[1])<<8 | uint32(buf[0])
+}
+"""
+)
+
 def create_go_boilerplate(file):
   """
   create imports and boilerplate.
@@ -8,6 +35,7 @@ package main
 
 import (
   "errors"
+  "utils"
   "fmt"
   "math"
   "mlgo/ml"
@@ -79,7 +107,7 @@ func {model_name}_model_load(fname string, model *{model_name}_model) error {{
 
   // verify magic
   {{
-    magic := readInt(file)
+    magic := utils.readInt(file)
     if magic != 0x67676d6c {{
       return errors.New("invalid model file (bad magic)")
     }}
@@ -87,10 +115,10 @@ func {model_name}_model_load(fname string, model *{model_name}_model) error {{
 
   // Read FC1 layer 1
   {{
-    n_dims := int32(readInt(file))
+    n_dims := int32(utils.readInt(file))
     ne_weight := make([]int32, 0)
     for i := int32(0); i < n_dims; i++ {{
-      ne_weight = append(ne_weight, int32(readInt(file)))
+      ne_weight = append(ne_weight, int32(utils.readInt(file)))
     }}
     // FC1 dimensions taken from file, eg. 768x500
     model.hparams.n_input = ne_weight[0]
@@ -98,26 +126,26 @@ func {model_name}_model_load(fname string, model *{model_name}_model) error {{
 
     model.fc1_weight = ml.NewTensor2D(nil, ml.TYPE_F32, uint32(model.hparams.n_input), uint32(model.hparams.n_hidden))
     for i := 0; i < len(model.fc1_weight.Data); i++{{
-      model.fc1_weight.Data[i] = readFP32(file)
+      model.fc1_weight.Data[i] = utils.readFP32(file)
     }}
 
     ne_bias := make([]int32, 0)
     for i := 0; i < int(n_dims); i++ {{
-      ne_bias = append(ne_bias, int32(readInt(file)))
+      ne_bias = append(ne_bias, int32(utils.readInt(file)))
     }}
 
     model.fc1_bias = ml.NewTensor1D(nil, ml.TYPE_F32, uint32(model.hparams.n_hidden))
     for i := 0; i < len(model.fc1_bias.Data); i++ {{
-      model.fc1_bias.Data[i] = readFP32(file)
+      model.fc1_bias.Data[i] = utils.readFP32(file)
     }}
   }}
 
   // Read Fc2 layer 2
   {{
-    n_dims := int32(readInt(file))
+    n_dims := int32(utils.readInt(file))
     ne_weight := make([]int32, 0)
     for i := 0; i < int(n_dims); i++ {{
-      ne_weight = append(ne_weight, int32(readInt(file)))
+      ne_weight = append(ne_weight, int32(utils.readInt(file)))
     }}
 
     // FC1 dimensions taken from file, eg. 10x500
@@ -125,17 +153,17 @@ func {model_name}_model_load(fname string, model *{model_name}_model) error {{
 
     model.fc2_weight = ml.NewTensor2D(nil, ml.TYPE_F32, uint32(model.hparams.n_hidden), uint32(model.hparams.n_classes))
     for i := 0; i < len(model.fc2_weight.Data); i++{{
-      model.fc2_weight.Data[i] = readFP32(file)
+      model.fc2_weight.Data[i] = utils.readFP32(file)
     }}
 
     ne_bias := make([]int32, 0)
     for i := 0; i < int(n_dims); i++ {{
-      ne_bias = append(ne_bias, int32(readInt(file)))
+      ne_bias = append(ne_bias, int32(utils.readInt(file)))
     }}
 
     model.fc2_bias = ml.NewTensor1D(nil, ml.TYPE_F32, uint32(model.hparams.n_classes))
     for i := 0; i < len(model.fc2_bias.Data); i++ {{
-      model.fc2_bias.Data[i] = readFP32(file)
+      model.fc2_bias.Data[i] = utils.readFP32(file)
     }}
     ml.printTensor(model.fc2_bias, "model.fc2_bias")
 
