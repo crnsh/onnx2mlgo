@@ -5,6 +5,7 @@ def read_from_onnx():
 
 def transpile(onnx, model_name):
   # TODO: make sure that model_name is a valid file_name
+  # TODO: get rid of everything that isn't required in this repository
 
   with open(f'utils.go', 'w') as file:
     writer.create_model_utils(file)
