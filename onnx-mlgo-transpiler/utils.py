@@ -1,5 +1,12 @@
 def create_hparams_type(file):
-  pass
+  file.write(
+"""
+type mnist_hparams struct{
+  n_input int32;
+  n_hidden int32;
+  n_classes int32;
+}"""
+  )
 
 def create_model_type(file):
   pass
