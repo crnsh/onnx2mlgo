@@ -59,12 +59,93 @@ type {model_name}_model struct {{
 """
   )
 
-def create_weight_loading_func(file):
+def create_weight_loading_func(file, model_name: str):
   """
   create function to load model weights
   e.g. - mnist_model_load
   """
-  pass
+
+  # TODO: abstract layers programmatically.
+
+  file.write(f"""\
+func {model_name}_model_load(fname string, model *{model_name}_model) error {{
+
+  file, err := os.Open(fname)
+  if err != nil {{
+    return err
+  }}
+  defer file.Close()
+
+
+  // verify magic
+  {{
+    magic := readInt(file)
+    if magic != 0x67676d6c {{
+      return errors.New("invalid model file (bad magic)")
+    }}
+  }}
+
+  // Read FC1 layer 1
+  {{
+    n_dims := int32(readInt(file))
+    ne_weight := make([]int32, 0)
+    for i := int32(0); i < n_dims; i++ {{
+      ne_weight = append(ne_weight, int32(readInt(file)))
+    }}
+    // FC1 dimensions taken from file, eg. 768x500
+    model.hparams.n_input = ne_weight[0]
+    model.hparams.n_hidden = ne_weight[1]
+
+    model.fc1_weight = ml.NewTensor2D(nil, ml.TYPE_F32, uint32(model.hparams.n_input), uint32(model.hparams.n_hidden))
+    for i := 0; i < len(model.fc1_weight.Data); i++{{
+      model.fc1_weight.Data[i] = readFP32(file)
+    }}
+
+    ne_bias := make([]int32, 0)
+    for i := 0; i < int(n_dims); i++ {{
+      ne_bias = append(ne_bias, int32(readInt(file)))
+    }}
+
+    model.fc1_bias = ml.NewTensor1D(nil, ml.TYPE_F32, uint32(model.hparams.n_hidden))
+    for i := 0; i < len(model.fc1_bias.Data); i++ {{
+      model.fc1_bias.Data[i] = readFP32(file)
+    }}
+  }}
+
+  // Read Fc2 layer 2
+  {{
+    n_dims := int32(readInt(file))
+    ne_weight := make([]int32, 0)
+    for i := 0; i < int(n_dims); i++ {{
+      ne_weight = append(ne_weight, int32(readInt(file)))
+    }}
+
+    // FC1 dimensions taken from file, eg. 10x500
+    model.hparams.n_classes = ne_weight[1]
+
+    model.fc2_weight = ml.NewTensor2D(nil, ml.TYPE_F32, uint32(model.hparams.n_hidden), uint32(model.hparams.n_classes))
+    for i := 0; i < len(model.fc2_weight.Data); i++{{
+      model.fc2_weight.Data[i] = readFP32(file)
+    }}
+
+    ne_bias := make([]int32, 0)
+    for i := 0; i < int(n_dims); i++ {{
+      ne_bias = append(ne_bias, int32(readInt(file)))
+    }}
+
+    model.fc2_bias = ml.NewTensor1D(nil, ml.TYPE_F32, uint32(model.hparams.n_classes))
+    for i := 0; i < len(model.fc2_bias.Data); i++ {{
+      model.fc2_bias.Data[i] = readFP32(file)
+    }}
+    printTensor(model.fc2_bias, "model.fc2_bias")
+
+  }}
+
+  return nil
+}}
+
+"""
+  )
 
 def create_eval_func(file):
   """
