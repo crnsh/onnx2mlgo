@@ -13,6 +13,7 @@ import (
   )
 
 def create_hparams_type(file):
+  # TODO: is this correct? are any variables required here?
   file.write("""\
 type mnist_hparams struct{
   n_input int32;
