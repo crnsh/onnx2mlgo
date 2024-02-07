@@ -11,6 +11,9 @@ examples/mnist/trainning/data/MNIST/raw
 mlgo
 mlgo.bin
 
+onnx-mlgo-transpiler/test.go
+onnx-mlgo-transpiler/__pycache__
+
 examples/llama/llama
 
 ml_mips/ml_mips

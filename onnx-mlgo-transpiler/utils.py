@@ -1,4 +1,5 @@
 def create_go_boilerplate(file):
+  # TODO: remove redundant imports
   file.write("""\
 package main
 
@@ -9,17 +10,19 @@ import (
   "mlgo/ml"
   "os"
 )
+
 """
   )
 
 def create_hparams_type(file):
   # TODO: is this correct? are any variables required here?
-  file.write("""\
-type mnist_hparams struct{
+  file.write(f"""\
+type mnist_hparams struct{{
   n_input int32;
   n_hidden int32;
   n_classes int32;
-}
+}}
+
 """
   )
 
