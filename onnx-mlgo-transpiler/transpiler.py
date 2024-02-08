@@ -13,8 +13,8 @@ def transpile(onnx, model_name):
   mlgo_model_path.mkdir(parents=True, exist_ok=True)
 
   with open(mlgo_model_path / 'test.go', 'w') as file:
-    writer.create_model_utils(file)
     writer.create_go_boilerplate(file)
+    writer.create_model_utils(file)
     writer.create_hparams_type(file, model_name)
     writer.create_model_type(file, model_name)
     writer.create_weight_loading_func(file, model_name)

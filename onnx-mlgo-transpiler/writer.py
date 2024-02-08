@@ -4,13 +4,6 @@ def create_model_utils(file):
   """
   file.write(
 """\
-package utils
-
-import (
-	"math"
-	"os"
-)
-
 func readFP32(file *os.File) float32 {
   buf := make([]byte, 4)
   if count, err := file.Read(buf); err != nil || count != 4 {
@@ -27,8 +20,9 @@ func readInt(file *os.File) uint32 {
   }
   return uint32(buf[3])<<24 | uint32(buf[2])<<16 | uint32(buf[1])<<8 | uint32(buf[0])
 }
+
 """
-)
+  )
 
 def create_go_boilerplate(file):
   """
@@ -43,6 +37,7 @@ import (
   "utils"
   "fmt"
 	"math/rand"
+  "math"
 	"time"
   "mlgo/ml"
   "os"
