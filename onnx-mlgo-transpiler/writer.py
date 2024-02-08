@@ -34,7 +34,6 @@ package main
 
 import (
   "errors"
-  "utils"
   "fmt"
 	"math/rand"
   "math"
