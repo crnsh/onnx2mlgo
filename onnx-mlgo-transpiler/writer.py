@@ -107,7 +107,7 @@ func {model_name}_model_load(fname string, model *{model_name}_model) error {{
 
   // verify magic
   {{
-    magic := utils.readInt(file)
+    magic := readInt(file)
     if magic != 0x67676d6c {{
       return errors.New("invalid model file (bad magic)")
     }}
@@ -115,10 +115,10 @@ func {model_name}_model_load(fname string, model *{model_name}_model) error {{
 
   // Read FC1 layer 1
   {{
-    n_dims := int32(utils.readInt(file))
+    n_dims := int32(readInt(file))
     ne_weight := make([]int32, 0)
     for i := int32(0); i < n_dims; i++ {{
-      ne_weight = append(ne_weight, int32(utils.readInt(file)))
+      ne_weight = append(ne_weight, int32(readInt(file)))
     }}
     // FC1 dimensions taken from file, eg. 768x500
     model.hparams.n_input = ne_weight[0]
@@ -126,26 +126,26 @@ func {model_name}_model_load(fname string, model *{model_name}_model) error {{
 
     model.fc1_weight = ml.NewTensor2D(nil, ml.TYPE_F32, uint32(model.hparams.n_input), uint32(model.hparams.n_hidden))
     for i := 0; i < len(model.fc1_weight.Data); i++{{
-      model.fc1_weight.Data[i] = utils.readFP32(file)
+      model.fc1_weight.Data[i] = readFP32(file)
     }}
 
     ne_bias := make([]int32, 0)
     for i := 0; i < int(n_dims); i++ {{
-      ne_bias = append(ne_bias, int32(utils.readInt(file)))
+      ne_bias = append(ne_bias, int32(readInt(file)))
     }}
 
     model.fc1_bias = ml.NewTensor1D(nil, ml.TYPE_F32, uint32(model.hparams.n_hidden))
     for i := 0; i < len(model.fc1_bias.Data); i++ {{
-      model.fc1_bias.Data[i] = utils.readFP32(file)
+      model.fc1_bias.Data[i] = readFP32(file)
     }}
   }}
 
   // Read Fc2 layer 2
   {{
-    n_dims := int32(utils.readInt(file))
+    n_dims := int32(readInt(file))
     ne_weight := make([]int32, 0)
     for i := 0; i < int(n_dims); i++ {{
-      ne_weight = append(ne_weight, int32(utils.readInt(file)))
+      ne_weight = append(ne_weight, int32(readInt(file)))
     }}
 
     // FC1 dimensions taken from file, eg. 10x500
@@ -153,19 +153,19 @@ func {model_name}_model_load(fname string, model *{model_name}_model) error {{
 
     model.fc2_weight = ml.NewTensor2D(nil, ml.TYPE_F32, uint32(model.hparams.n_hidden), uint32(model.hparams.n_classes))
     for i := 0; i < len(model.fc2_weight.Data); i++{{
-      model.fc2_weight.Data[i] = utils.readFP32(file)
+      model.fc2_weight.Data[i] = readFP32(file)
     }}
 
     ne_bias := make([]int32, 0)
     for i := 0; i < int(n_dims); i++ {{
-      ne_bias = append(ne_bias, int32(utils.readInt(file)))
+      ne_bias = append(ne_bias, int32(readInt(file)))
     }}
 
     model.fc2_bias = ml.NewTensor1D(nil, ml.TYPE_F32, uint32(model.hparams.n_classes))
     for i := 0; i < len(model.fc2_bias.Data); i++ {{
-      model.fc2_bias.Data[i] = utils.readFP32(file)
+      model.fc2_bias.Data[i] = readFP32(file)
     }}
-    ml.printTensor(model.fc2_bias, "model.fc2_bias")
+    ml.PrintTensor(model.fc2_bias, "model.fc2_bias")
 
   }}
 
@@ -205,7 +205,7 @@ func {model_name}_eval(model *{model_name}_model, threadCount int, digit []float
 	ml.BuildForwardExpand(&graph, final)
 	ml.GraphCompute(ctx0, &graph)
 
-	ml.printTensor(final, "final tensor")
+	ml.PrintTensor(final, "final tensor")
 
 	maxIndex := 0
 	for i := 0; i < 10; i++{{
@@ -225,13 +225,12 @@ def create_main_func(file, model_name: str):
   """
 
   # TODO: decide which variables need to be here based on onnx
-
-
   # TODO: decide what to do with ml.SINGLE_THREAD
+  # TODO: make sure that the model weights and inputs are accessed properly
+  # TODO: make sure that the paths are relative to THIS file as opposed to the shell
 
-
-  modelFile = "models/mnist/ggml-model-f32.bin"
-  digitFile = "models/mnist/t10k-images.idx3-ubyte"
+  modelFile = "models/ggml-model-f32.bin"
+  digitFile = "models/t10k-images.idx3-ubyte"
 
   file.write(
 f"""\
