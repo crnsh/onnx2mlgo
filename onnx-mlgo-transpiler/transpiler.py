@@ -8,17 +8,12 @@ def transpile(onnx, model_name):
   # TODO: make sure that model_name is a valid file_name
   # TODO: get rid of everything that isn't required in this repository
 
-  utils_path = Path('dist/utils/')
-  mlgo_model_path = Path('dist/mlgo_model/')
+  mlgo_model_path = Path('dist/')
 
-  utils_path.mkdir(parents=True, exist_ok=True)
   mlgo_model_path.mkdir(parents=True, exist_ok=True)
 
-  # Transpilation Begins
-  with open(utils_path / 'utils.go', 'w') as file:
-    writer.create_model_utils(file)
-
   with open(mlgo_model_path / 'test.go', 'w') as file:
+    writer.create_model_utils(file)
     writer.create_go_boilerplate(file)
     writer.create_hparams_type(file, model_name)
     writer.create_model_type(file, model_name)
