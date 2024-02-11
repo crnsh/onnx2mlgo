@@ -1,10 +1,14 @@
 import writer
 from pathlib import Path
+import onnx
 
 def read_from_onnx():
-  pass
+  onnx_path = Path('./mnist_test.onnx')
+  model = onnx.load(onnx_path)
 
-def transpile(onnx, model_name):
+  return model
+
+def transpile(onnx_model, model_name):
   # TODO: make sure that model_name is a valid file_name
   # TODO: get rid of everything that isn't required in this repository
 
@@ -22,7 +26,7 @@ def transpile(onnx, model_name):
     writer.create_main_func(file, model_name)
 
 def main():
-  onnx_output = read_from_onnx()
-  transpile(onnx_output, 'test')
+  onnx_model = read_from_onnx()
+  transpile(onnx_model, 'test')
   
 main()
