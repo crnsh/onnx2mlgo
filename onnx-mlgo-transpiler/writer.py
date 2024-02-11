@@ -1,3 +1,25 @@
+import utils
+
+def create_go_boilerplate(file):
+  """
+  create imports and boilerplate.
+  """
+  file.write("""\
+package main
+
+import (
+  "errors"
+  "fmt"
+  "math/rand"
+  "math"
+  "time"
+  "mlgo/ml"
+  "os"
+)
+
+"""
+  )
+
 def create_model_utils(file):
   """
   create model utils.
@@ -20,27 +42,6 @@ func readInt(file *os.File) uint32 {
   }
   return uint32(buf[3])<<24 | uint32(buf[2])<<16 | uint32(buf[1])<<8 | uint32(buf[0])
 }
-
-"""
-  )
-
-def create_go_boilerplate(file):
-  """
-  create imports and boilerplate.
-  """
-  # TODO: remove redundant imports
-  file.write("""\
-package main
-
-import (
-  "errors"
-  "fmt"
-	"math/rand"
-  "math"
-	"time"
-  "mlgo/ml"
-  "os"
-)
 
 """
   )
