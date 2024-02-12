@@ -1,5 +1,30 @@
-def create_layers():
+def create_graph(onnx):
+
+  # assert : output is a graph where each node a valid mlgo operation.
+
+  return output 
+
+def create_single_layer(var_name: str, mlgo_op: str, input_list):
+
+  # TODO: check whether the number of inputs are valid for the given mlgo_op
   
+  input_str = ', '.join(input_list)
+  return f'{var_name} := ml.{mlgo_op}(ctx0, {input_str})'
+
+def create_layers(onnx):
+  
+  mlgo_graph = create_graph(onnx)
+  output = ""
+
+  i = 1
+  for node in mlgo_graph.in_order:
+    
+    # TODO: make sure that the order of inputs, weights and biases is correct
+
+    input_list = [INPUT STRING, weights and biases]
+
+    output.append(create_single_layer(f'l{x}', node.mlgo_op, input_list))
+
   # assert : output is the go language output for the layers
   
   output = """\
