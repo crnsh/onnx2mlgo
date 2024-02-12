@@ -1,3 +1,6 @@
+from typing import List
+from graph import Graph
+
 def create_graph(onnx):
 
   # assert : output is a graph where each node a valid mlgo operation.
@@ -13,17 +16,25 @@ def create_single_layer(var_name: str, mlgo_op: str, input_list):
 
 def create_layers(onnx):
   
-  mlgo_graph = create_graph(onnx)
+  mlgo_graph = Graph(onnx)
   output = ""
 
   i = 1
   for node in mlgo_graph.in_order:
     
-    # TODO: make sure that the order of inputs, weights and biases is correct
+    op_input: str = GET_OP_INPUT
+    op_weights: List[str] = GET_OP_WEIGHTS
 
-    input_list = [INPUT STRING, weights and biases]
+    input_list = None
 
-    output.append(create_single_layer(f'l{x}', node.mlgo_op, input_list))
+    if (node.input_first):
+      input_list = [op_input]
+      input_list += op_weights
+    else:
+      input_list = op_weights
+      input_list += [op_input]
+
+    output.append(create_single_layer(f'l{i}', node.mlgo_op, input_list))
 
   # assert : output is the go language output for the layers
   
