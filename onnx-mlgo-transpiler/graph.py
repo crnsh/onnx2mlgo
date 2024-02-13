@@ -27,14 +27,14 @@ class Node:
     return self._outputs
 
   @classmethod
-  def create_node(cls, node, i: int):
-    if node.op_type == "Gemm":  
+  def create_node(cls, onnx_node, i: int):
+    if onnx_node.op_type == "Gemm":  
       temp_output = f'temp{i}'
-      node1 = Node('MulMat', node.input[0:2], temp_output)
-      node2 = Node('Add', [temp_output, node.input[2]], node.output)
+      node1 = Node('MulMat', onnx_node.input[0:2], temp_output)
+      node2 = Node('Add', [temp_output, onnx_node.input[2]], onnx_node.output)
       return [node1, node2]
-    elif node.op_type == "Relu":
-      pass
+    elif onnx_node.op_type == "Relu":
+      node1 = Node
 
 class Graph:
   def __init__(self, onnx_graph):
@@ -50,6 +50,7 @@ class Graph:
     for onnx_node in onnx_graph.graph.node:
       # assert : self._graph is a complete graph with last output as last_output
       # assert : node takes in 1 input, x weights and has 1 output
+      print(onnx_node)
       node_list = Node.create_node(onnx_node, i)
       
       for node in node_list:
