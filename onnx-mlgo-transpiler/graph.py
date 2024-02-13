@@ -2,9 +2,12 @@ from onnx.checker import check_model
 from typing import List
 
 class Node:
-  def __init__(self, node):
+  def __init__(self, mlgo_op: str, inputs: List[str], output: str):
     # TODO: add other necessary params as well
-    pass
+    self._op = mlgo_op
+    self._inputs = inputs    
+    self._output = output
+    self._input_first = True
 
   # TODO: figure out this whole _input_first thing
   @property
