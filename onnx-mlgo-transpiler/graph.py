@@ -63,5 +63,5 @@ class Graph:
     return {'nodes': self._nodes, 'inputs': self._inputs, 'outputs': self._outputs}
   
   def add_node(self, node):
-    pass
+    self._nodes.append(node)
         

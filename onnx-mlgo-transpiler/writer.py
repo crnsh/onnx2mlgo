@@ -197,7 +197,7 @@ func model_eval(model *model_struct, threadCount int, digit []float32) int {{
   input := ml.NewTensor1D(ctx0, ml.TYPE_F32, uint32(model.hparams.n_input))
   copy(input.Data, digit)
 
-{layers}
+{utils.indent_lines(layers, 2)}
 
   // run the computation
   ml.BuildForwardExpand(&graph, final)
