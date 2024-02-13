@@ -1,12 +1,6 @@
 from typing import List
 from graph import Graph
 
-def create_graph(onnx):
-
-  # assert : output is a graph where each node a valid mlgo operation.
-
-  return output 
-
 def create_single_layer(var_name: str, mlgo_op: str, input_list):
 
   # TODO: check whether the number of inputs are valid for the given mlgo_op
