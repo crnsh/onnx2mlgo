@@ -34,7 +34,8 @@ class Node:
       node2 = Node('Add', [temp_output, onnx_node.input[2]], onnx_node.output)
       return [node1, node2]
     elif onnx_node.op_type == "Relu":
-      node1 = Node
+      node = Node('Relu', onnx_node.input, onnx_node.output)
+      return node
 
 class Graph:
   def __init__(self, onnx_graph):
