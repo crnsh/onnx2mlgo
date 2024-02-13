@@ -27,7 +27,7 @@ class Node:
     return self._outputs
 
   @classmethod
-  def create_node(cls, onnx_node, i: int):
+  def create_node(cls, onnx_node, i: int) -> List:
     if onnx_node.op_type == "Gemm":  
       temp_output = f'temp{i}'
       node1 = Node('MulMat', onnx_node.input[0:2], temp_output)
@@ -35,7 +35,7 @@ class Node:
       return [node1, node2]
     elif onnx_node.op_type == "Relu":
       node = Node('Relu', onnx_node.input, onnx_node.output)
-      return node
+      return [node]
 
 class Graph:
   def __init__(self, onnx_graph):
@@ -51,18 +51,17 @@ class Graph:
     for onnx_node in onnx_graph.graph.node:
       # assert : self._graph is a complete graph with last output as last_output
       # assert : node takes in 1 input, x weights and has 1 output
-      print(onnx_node)
       node_list = Node.create_node(onnx_node, i)
       
       for node in node_list:
-        self.add_node_to_graph(node)
-      
+        self.add_node(node)
+
       i += 1
 
   @property
   def graph(self):
-    return {'graph': self._graph, 'inputs': self._inputs, 'outputs': self._outputs}
+    return {'nodes': self._nodes, 'inputs': self._inputs, 'outputs': self._outputs}
   
-  def add_node_to_graph(self, node):
+  def add_node(self, node):
     pass
         

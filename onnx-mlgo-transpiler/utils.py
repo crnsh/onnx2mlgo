@@ -15,7 +15,7 @@ def create_layers(onnx):
 
   i = 1
   # TODO: extend this for multi-path graphs
-  for node in mlgo_graph.graph['graph']:
+  for node in mlgo_graph.graph['nodes']:
     output.append(create_single_layer(f'l{i}', node.op, node.inputs))
 
   # assert : output is the go language output for the layers
