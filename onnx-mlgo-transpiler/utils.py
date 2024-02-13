@@ -20,6 +20,7 @@ def create_layers(onnx):
   output = ""
 
   i = 1
+  # TODO: extend this for multi-path graphs
   for node in mlgo_graph.in_order:
     
     op_input: str = GET_OP_INPUT

@@ -16,7 +16,7 @@ class Graph:
     check_model(onnx_graph)
 
     # properties
-    graph = []
+    graph: List[Node] = []
 
     for node in onnx_graph.graph.node:
       pass
