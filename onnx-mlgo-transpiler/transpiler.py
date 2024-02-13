@@ -23,7 +23,7 @@ def transpile(onnx_model, model_name):
     writer.create_hparams_type(file)
     writer.create_model_type(file)
     writer.create_weight_loading_func(file)
-    writer.create_eval_func(file)
+    writer.create_eval_func(file, onnx_model)
     writer.create_main_func(file)
 
 def main():

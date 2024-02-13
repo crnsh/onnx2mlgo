@@ -176,13 +176,13 @@ func model_load(fname string, model *model_struct) error {{
 """
   )
 
-def create_eval_func(file):
+def create_eval_func(file, onnx_model):
   """
   create function to evaluate model
   e.g. - mnist_eval
   """
   
-  layers = utils.create_layers()
+  layers = utils.create_layers(onnx_model)
 
   # TODO: create input tensor according to onnx
   # TODO: create fc's (layers) according to onnx

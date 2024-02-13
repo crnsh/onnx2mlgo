@@ -5,7 +5,24 @@ class Node:
   def __init__(self, node):
     # TODO: add other necessary params as well
     pass
-  
+
+  # TODO: figure out this whole _input_first thing
+  @property
+  def input_first(self):
+    return self._input_first
+
+  @property
+  def op(self):
+    return self._op
+
+  @property
+  def inputs(self):
+    return self._inputs
+
+  @property
+  def output(self):
+    return self._outputs
+
   @classmethod
   def create_node(cls, node, i: int):
     if node.op_type == "Gemm":  
@@ -36,6 +53,10 @@ class Graph:
         self.add_node_to_graph(node)
       
       i += 1
+
+  @property
+  def graph(self):
+    return {'graph': self._graph, 'inputs': self._inputs, 'outputs': self._outputs}
   
   def add_node_to_graph(self, node):
     pass
