@@ -19,12 +19,12 @@ last line of code.
     
   return output
 
-def create_single_layer(var_name: str, mlgo_op: str, input_list) -> str:
+def create_single_layer(output_var: str, mlgo_op: str, input_list) -> str:
 
   # TODO: check whether the number of inputs are valid for the given mlgo_op
   
   input_str = ', '.join(input_list)
-  return f'{var_name} := ml.{mlgo_op}(ctx0, {input_str})'
+  return f'{output_var} := ml.{mlgo_op}(ctx0, {input_str})'
 
 def create_layers(onnx) -> List[str]:
   
