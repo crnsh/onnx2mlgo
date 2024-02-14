@@ -24,7 +24,7 @@ class Node:
 
   @property
   def output(self):
-    return self._outputs
+    return self._output
 
   @classmethod
   def create_node(cls, onnx_node, i: int) -> List:
