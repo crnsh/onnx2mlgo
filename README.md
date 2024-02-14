@@ -1,4 +1,4 @@
-# CLI Transpiler from ONNX to MLGO
+# CLI Transpilation from ONNX to MLGO
 
 Compiles ONNX to MLGO. MLGO is tensor library for machine learning in pure Golang that can run on MIPS. 
 
