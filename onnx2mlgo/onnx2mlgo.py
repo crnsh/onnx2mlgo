@@ -14,12 +14,14 @@ import click
     path_type=Path,
   )
 )
-@click.option("-o", "--output_dir",
-              type=click.Path(
-                exists=False,
-                path_type=Path,
-              ),
-              default="dist",
+@click.option(
+  "-o", 
+  "--output_dir",
+  type=click.Path(
+    exists=False,
+    path_type=Path,
+  ),
+  default="dist",
 )
 def cli(onnx_path, output_dir):
   # TODO: make sure that model_name is a valid file_name
