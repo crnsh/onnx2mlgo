@@ -40,3 +40,6 @@ def create_layers(onnx) -> List[str]:
   # assert : output is the go language output for the layers
   
   return output
+
+def initialize_tensors(onnx) -> List[str]:
+  pass

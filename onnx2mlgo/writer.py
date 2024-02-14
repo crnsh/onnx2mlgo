@@ -85,6 +85,7 @@ type model_struct struct {{
 {layers}
 
 }}
+
 """
   )
 
@@ -183,6 +184,7 @@ def create_eval_func(file, onnx_model):
   """
   
   layers = utils.create_layers(onnx_model)
+  tensor_initialization = utils.initialize_tensors(onnx_model)
   
   # TODO: create input tensor according to onnx
   # TODO: create fc's (layers) according to onnx
@@ -191,11 +193,13 @@ def create_eval_func(file, onnx_model):
   f"""\
 func model_eval(model *model_struct, threadCount int, digit []float32) int {{
 
+{utils.indent_lines(tensor_initialization, 2)}
+
+  # input := ml.NewTensor1D(ctx0, ml.TYPE_F32, uint32(model.hparams.n_input))
+  # copy(input.Data, digit)
+
   ctx0 := &ml.Context{{}}
   graph := ml.Graph{{ThreadsCount: threadCount}}
-
-  input := ml.NewTensor1D(ctx0, ml.TYPE_F32, uint32(model.hparams.n_input))
-  copy(input.Data, digit)
 
 {utils.indent_lines(layers, 2)}
 
