@@ -3,17 +3,26 @@ from pathlib import Path
 import onnx
 import click
 
-@click.version_option("0.1.1", prog_name="onnx2mlgo")
+@click.version_option("0.1.2", prog_name="onnx2mlgo")
 @click.command()
-@click.argument("onnx_path")
-def cli(onnx_path):
+@click.argument(
+  "onnx_path",
+  type=click.Path(
+    exists=True,
+    file_okay=True,
+    readable=True,
+    path_type=Path
+  )
+)
+@click.option("output_path")
+def cli(onnx_path, output_path = ""):
   # TODO: make sure that model_name is a valid file_name
   # TODO: get rid of everything that isn't required in this repository
   # TODO: remove model_name from the entire transpiler. this is not required and just adds additional complexity. make the name default to 'model' and write the model_name at the beginning as a comment
 
   onnx_model = onnx.load(Path(onnx_path))
 
-  mlgo_model_path = Path('dist/')
+  mlgo_model_path = Path(output_path) / Path('dist/')
   mlgo_model_path.mkdir(parents=True, exist_ok=True)
 
   with open(mlgo_model_path / 'test.go', 'w') as file:
