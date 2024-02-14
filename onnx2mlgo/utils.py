@@ -19,14 +19,14 @@ last line of code.
     
   return output
 
-def create_single_layer(var_name: str, mlgo_op: str, input_list):
+def create_single_layer(var_name: str, mlgo_op: str, input_list) -> str:
 
   # TODO: check whether the number of inputs are valid for the given mlgo_op
   
   input_str = ', '.join(input_list)
   return f'{var_name} := ml.{mlgo_op}(ctx0, {input_str})'
 
-def create_layers(onnx):
+def create_layers(onnx) -> List[str]:
   
   mlgo_graph = Graph(onnx)
   output: List[str] = []
