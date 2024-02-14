@@ -183,6 +183,8 @@ def create_eval_func(file, onnx_model):
   """
   
   layers = utils.create_layers(onnx_model)
+  
+  print(layers)
 
   # TODO: create input tensor according to onnx
   # TODO: create fc's (layers) according to onnx

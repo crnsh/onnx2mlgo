@@ -1,12 +1,30 @@
 from typing import List
 from graph import Graph
 
+def indent_lines(code_list: List[str], space_size: int, tabs: bool = False):
+  """Formats a `code_list` into a single string where each line is on a new line.\
+Each line has `space_size` spaces before each line. Doesn't add a new line to the\
+last line of code.
+
+  Args:
+      code_list (List[str]): Each element represents a line of code
+      space_size (_type_): Size of spacing before each line
+  """
+  output = ""
+  spacing = ' ' * space_size
+  
+  for i in range(len(code_list)):
+    new_line = '\n' if i != (len(code_list)-1) else ''
+    output += f'{spacing}{code_list[i]}{new_line}'
+    
+  return output
+
 def create_single_layer(var_name: str, mlgo_op: str, input_list):
 
   # TODO: check whether the number of inputs are valid for the given mlgo_op
   
   input_str = ', '.join(input_list)
-  return f'{var_name} := ml.{mlgo_op}(ctx0, {input_str})\n'
+  return f'{var_name} := ml.{mlgo_op}(ctx0, {input_str})'
 
 def create_layers(onnx):
   
