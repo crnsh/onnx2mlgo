@@ -25,7 +25,7 @@ def cli(onnx_path):
     writer.create_eval_func(file, onnx_model)
     writer.create_main_func(file)
     
-  click.echo(f"Transpilation complete!\n")
+  click.echo(f"Transpilation complete!")
   click.echo(f"MLGO file created in {mlgo_model_path.absolute()}")
 
 if __name__ == "__main__":

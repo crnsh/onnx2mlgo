@@ -1,2 +1,3 @@
 onnx2mlgo/__pycache__
+onnx2mlgo/mnist_test.onnx
 onnx2mlgo/dist
