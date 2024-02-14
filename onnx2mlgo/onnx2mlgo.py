@@ -19,7 +19,7 @@ import click
                 exists=False,
                 path_type=Path,
               ),
-              default="",
+              default="dist",
 )
 def cli(onnx_path, output_dir):
   # TODO: make sure that model_name is a valid file_name
@@ -28,7 +28,7 @@ def cli(onnx_path, output_dir):
 
   onnx_model = onnx.load(Path(onnx_path))
 
-  mlgo_model_path = Path(output_dir) / Path('dist/')
+  mlgo_model_path = Path(output_dir)
   mlgo_model_path.mkdir(parents=True, exist_ok=True)
 
   with open(mlgo_model_path / 'test.go', 'w') as file:
