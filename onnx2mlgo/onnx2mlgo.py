@@ -11,18 +11,24 @@ import click
     exists=True,
     file_okay=True,
     readable=True,
-    path_type=Path
+    path_type=Path,
   )
 )
-@click.option("output_path")
-def cli(onnx_path, output_path = ""):
+@click.option("-o", "--output_dir",
+              type=click.Path(
+                exists=False,
+                path_type=Path,
+              ),
+              default="",
+)
+def cli(onnx_path, output_dir):
   # TODO: make sure that model_name is a valid file_name
   # TODO: get rid of everything that isn't required in this repository
   # TODO: remove model_name from the entire transpiler. this is not required and just adds additional complexity. make the name default to 'model' and write the model_name at the beginning as a comment
 
   onnx_model = onnx.load(Path(onnx_path))
 
-  mlgo_model_path = Path(output_path) / Path('dist/')
+  mlgo_model_path = Path(output_dir) / Path('dist/')
   mlgo_model_path.mkdir(parents=True, exist_ok=True)
 
   with open(mlgo_model_path / 'test.go', 'w') as file:
