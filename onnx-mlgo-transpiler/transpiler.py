@@ -1,20 +1,19 @@
 import writer
 from pathlib import Path
 import onnx
+import click
 
-def read_from_onnx():
-  onnx_path = Path('./mnist_test.onnx')
-  model = onnx.load(onnx_path)
-
-  return model
-
-def transpile(onnx_model, model_name):
+@click.version_option("0.1.1", prog_name="onnx2mlgo")
+@click.command()
+@click.argument("onnx_path")
+def transpile(onnx_path, model_name):
   # TODO: make sure that model_name is a valid file_name
   # TODO: get rid of everything that isn't required in this repository
   # TODO: remove model_name from the entire transpiler. this is not required and just adds additional complexity. make the name default to 'model' and write the model_name at the beginning as a comment
 
-  mlgo_model_path = Path('dist/')
+  onnx_model = onnx.load(Path(onnx_path))
 
+  mlgo_model_path = Path('dist/')
   mlgo_model_path.mkdir(parents=True, exist_ok=True)
 
   with open(mlgo_model_path / 'test.go', 'w') as file:
@@ -25,9 +24,9 @@ def transpile(onnx_model, model_name):
     writer.create_weight_loading_func(file)
     writer.create_eval_func(file, onnx_model)
     writer.create_main_func(file)
+    
+  click.echo(f"Transpilation complete!\n")
+  click.echo(f"MLGO file created in {mlgo_model_path.absolute()}")
 
-def main():
-  onnx_model = read_from_onnx()
-  transpile(onnx_model, 'test')
-  
-main()
+if __name__ == "__main__":
+  transpile()
