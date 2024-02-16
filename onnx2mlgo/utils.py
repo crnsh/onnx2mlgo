@@ -3,13 +3,13 @@ from graph import Graph
 import re
 from onnx2mlgo import types
 
-def indent_lines(code_list: List[str], space_size: int, tabs: bool = False):
+def indent_lines(code_list: types.Statement, space_size: int, tabs: bool = False):
   """Formats a `code_list` into a single string where each line is on a new line.\
 Each line has `space_size` spaces before each line. Doesn't add a new line to the\
 last line of code.
 
   Args:
-      code_list (List[str]): Each element represents a line of code
+      code_list (types.Statement): Each element represents a line of code
       space_size (_type_): Size of spacing before each line
   """
   output = ""
@@ -24,8 +24,8 @@ def create_single_layer(var_name: str, mlgo_op: str, input_list) -> str:
   input_str = ', '.join(input_list)
   return f'{var_name} := ml.{mlgo_op}(ctx0, {input_str})'
 
-def create_layers(graph: Graph) -> List[str]:
-  output: List[str] = []
+def create_layers(graph: Graph) -> types.Statement:
+  output: types.Statement = []
   # TODO: extend this for multi-path graphs
   for node in graph.nodes:
     output.append(create_single_layer(node.output, node.op, node.inputs))
@@ -61,16 +61,16 @@ for {init_statement}; {condition_statement}; {post_statement} {{
 }}
 ''']
 
-def initialize_tensor(loop_var: str, tensor_var_name: str, filename: str) -> List[str]:
+def initialize_tensor(loop_var: str, tensor_var_name: str, filename: str) -> types.Statement:
   # TODO: create a codegen library for go
   return create_for_loop(f'{loop_var} := 0', f'{loop_var} < len({tensor_var_name})', f'{loop_var}++',
                          [f'{tensor_var_name}.Data[{loop_var}] = 0.412152'])
 
-def define_and_initialize_tensors(graph: Graph) -> List[str]:
+def define_and_initialize_tensors(graph: Graph) -> types.Statement:
   output = []
   # TODO: there are ml.NewTensor2DWithData type tensors. see if you can integrate them
   for initializer in graph.initializers:
-    output += define_tensor(initializer.name, TEST, 'nil', 'TYPE_F32', initializer.shape)
+    output += define_tensor(initializer.name, 'NewTensor1D', 'nil', 'TYPE_F32', initializer.shape)
     output += initialize_tensor(initializer)
     output.append('') # new line
   for input in graph.inputs:
