@@ -196,8 +196,8 @@ func model_eval(model *model_struct, threadCount int, digit []float32) int {{
 
 {utils.indent_lines(tensor_initialization, 2)}
 
-  # input := ml.NewTensor1D(ctx0, ml.TYPE_F32, uint32(model.hparams.n_input))
-  # copy(input.Data, digit)
+  // input := ml.NewTensor1D(ctx0, ml.TYPE_F32, uint32(model.hparams.n_input))
+  // copy(input.Data, digit)
 
   ctx0 := &ml.Context{{}}
   graph := ml.Graph{{ThreadsCount: threadCount}}

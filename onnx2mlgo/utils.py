@@ -58,20 +58,32 @@ def create_for_loop(
   return [f'''\
 for {init_statement}; {condition_statement}; {post_statement} {{
   {indent_lines(loop_statements, 2)}
-}}
-''']
+}}''']
 
-def initialize_tensor(loop_var: str, tensor_var_name: str, filename: str) -> custom_types.Statement:
+def initialize_tensor(loop_var: str, tensor_var_name: str, filename: str = '') -> custom_types.Statement:
   # TODO: create a codegen library for go
+  # TODO: remove the {loop_var} param and replace it with a function that finds a loop_var not currently in use
   return create_for_loop(f'{loop_var} := 0', f'{loop_var} < len({tensor_var_name})', f'{loop_var}++',
                          [f'{tensor_var_name}.Data[{loop_var}] = 0.412152'])
+
+tensor_variants = {
+    1: 'NewTensor1D',
+    2: 'NewTensor2D',
+    3: 'NewTensor3D',
+    4: 'NewTensor4D'
+}
 
 def define_and_initialize_tensors(graph: Graph) -> custom_types.Statement:
   output = []
   # TODO: there are ml.NewTensor2DWithData type tensors. see if you can integrate them
   for initializer in graph.initializers:
-    output += define_tensor(initializer.name, 'NewTensor1D', 'nil', 'TYPE_F32', initializer.shape)
-    output += initialize_tensor(initializer)
+    dims_length = len(initializer.dims)
+    if dims_length in tensor_variants:
+      tensor_variant = tensor_variants[dims_length]
+    else:
+      raise Exception(f'number of dims ({initializer.dims}) does not fit any tensor_variant')
+    output += define_tensor(initializer.name, tensor_variant, 'nil', 'TYPE_F32', initializer.dims)
+    output += initialize_tensor('i', initializer.name)
     output.append('') # new line
   for input in graph.inputs:
     pass

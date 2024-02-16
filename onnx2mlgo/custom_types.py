@@ -1,6 +1,7 @@
 from typing import List, Literal
 
 # TODO: Statement should most probably be a str instead of List[str]
+# TODO: Statement should consist of a List[Line], where Line = str
 
 Statement = List[str] # A single statement of code (not necessarily a single line)
 

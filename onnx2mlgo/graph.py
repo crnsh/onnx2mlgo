@@ -5,7 +5,7 @@ class Node:
   def __init__(self, mlgo_op: str, inputs: List[str], output: str):
     # TODO: add other necessary params as well
     self._op = mlgo_op
-    self._inputs = inputs    
+    self._inputs = inputs
     self._output = output
     self._input_first = True
 
@@ -28,13 +28,16 @@ class Node:
 
   @classmethod
   def create_node(cls, onnx_node, i: int) -> List:
+    if len(onnx_node.output) > 1:
+      raise NotImplementedError(f'onnx nodes with multiple outputs are currently not supported')
     if onnx_node.op_type == "Gemm":  
       temp_output = f'temp{i}'
+      # TODO: clean the inputs and outputs here so that they're valid go variables
       node1 = Node('MulMat', onnx_node.input[0:2], temp_output)
-      node2 = Node('Add', [temp_output, onnx_node.input[2]], onnx_node.output)
+      node2 = Node('Add', [temp_output, onnx_node.input[2]], onnx_node.output[0])
       return [node1, node2]
     elif onnx_node.op_type == "Relu":
-      node = Node('Relu', onnx_node.input, onnx_node.output)
+      node = Node('Relu', onnx_node.input, onnx_node.output[0])
       return [node]
 
 class Graph:
