@@ -59,8 +59,16 @@ class Graph:
       i += 1
 
   @property
-  def graph(self):
-    return {'nodes': self._nodes, 'inputs': self._inputs, 'outputs': self._outputs}
+  def nodes(self):
+    return self._nodes
+
+  @property
+  def inputs(self):
+    return self._inputs
+
+  @property
+  def outputs(self):
+    return self._outputs
   
   def add_node(self, node):
     self._nodes.append(node)

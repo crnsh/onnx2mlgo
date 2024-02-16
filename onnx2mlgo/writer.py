@@ -185,7 +185,7 @@ def create_eval_func(file, graph: Graph):
   """
   
   layers = utils.create_layers(graph)
-  tensor_initialization = utils.initialize_tensors(graph)
+  tensor_initialization = utils.define_and_initialize_tensors(graph)
   
   # TODO: create input tensor according to onnx
   # TODO: create fc's (layers) according to onnx

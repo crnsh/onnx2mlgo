@@ -31,14 +31,17 @@ def create_layers(graph: Graph) -> List[str]:
   output: List[str] = []
 
   # TODO: extend this for multi-path graphs
-  for node in graph.graph['nodes']:
+  for node in graph.nodes:
     output.append(create_single_layer(node.output, node.op, node.inputs))
 
   # assert : output is a list of go language lines for the defining layers of the nn
   
   return output
 
-def initialize_tensors(graph: Graph) -> List[str]:
+def define_and_initialize_tensors(graph: Graph) -> List[str]:
+
+  for input in graph.inputs:
+    pass
 
   # assert : output is a list of go language lines for defining and initializing the input and weight tensors
 
