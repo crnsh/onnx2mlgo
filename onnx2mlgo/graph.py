@@ -30,7 +30,7 @@ class Node:
   def create_node(cls, onnx_node, i: int) -> List:
     if len(onnx_node.output) > 1:
       raise NotImplementedError(f'onnx nodes with multiple outputs are currently not supported')
-    if onnx_node.op_type == "Gemm":  
+    if onnx_node.op_type == "Gemm":
       temp_output = f'temp{i}'
       # TODO: clean the inputs and outputs here so that they're valid go variables
       node1 = Node('MulMat', onnx_node.input[0:2], temp_output)
