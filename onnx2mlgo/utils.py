@@ -1,6 +1,7 @@
-from typing import List, Literal
+from typing import List
 from graph import Graph
 import re
+from onnx2mlgo import types
 
 def indent_lines(code_list: List[str], space_size: int, tabs: bool = False):
   """Formats a `code_list` into a single string where each line is on a new line.\
@@ -39,25 +40,7 @@ def create_layers(graph: Graph) -> List[str]:
   
   return output
 
-Dtype = Literal[
-  'TYPE_F32',
-  'TYPE_F16',
-  'TYPE_Q4_0',
-  'TYPE_Q4_1',
-  'TYPE_I8',
-  'TYPE_I16',
-  'TYPE_I32',
-  'TYPE_COUNT'
-]
-
-TensorVariant = Literal[
-  'NewTensor1D',
-  'NewTensor2D',
-  'NewTensor3D',
-  'NewTensor4D',
-]
-
-def shape_size(tensor_variant: TensorVariant):
+def shape_size(tensor_variant: types.TensorVariant):
   number = re.search(r'\d+', tensor_variant)
   if number:
     return int(number.group())
@@ -65,21 +48,26 @@ def shape_size(tensor_variant: TensorVariant):
     raise ValueError(f'tensor variant ({tensor_variant}) does not indicate shape size')
 
 def define_tensor(var_name: str,
-                  tensor_variant: TensorVariant,
+                  tensor_variant: types.TensorVariant,
                   ctx: str,
-                  dtype: Dtype,
+                  dtype: types.Dtype,
                   shape: List[int]):
   shape_argument = ', '.join([f'uint({dim})' for dim in shape])
   if shape_size(tensor_variant) != len(shape):
     raise ValueError(f'shape size ({len(shape)}) does not match tensor variant ({tensor_variant})')
-  return f'{var_name} = ml.{tensor_variant}({ctx}, ml.{dtype}, {shape_argument})'
+  return [f'{var_name} = ml.{tensor_variant}({ctx}, ml.{dtype}, {shape_argument})']
+
+def initialize_tensor(i: str, tensor_var_name: str, filename: str) -> List[str]:
+  output = []
+  output.append('f')
 
 def define_and_initialize_tensors(graph: Graph) -> List[str]:
   output = []
   # TODO: there are ml.NewTensor2DWithData type tensors. see if you can integrate them
   for initializer in graph.initializers:
-    define_tensor(initializer)
-    initialize_tensor(initializer)
+    output += define_tensor(initializer.name, TEST, 'nil', 'TYPE_F32', initializer.shape)
+    output += initialize_tensor(initializer)
+    output.append('') # new line
   for input in graph.inputs:
     pass
 
