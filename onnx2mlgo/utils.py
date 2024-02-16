@@ -31,7 +31,7 @@ def create_layers(graph: Graph) -> List[str]:
   output: List[str] = []
 
   # TODO: extend this for multi-path graphs
-  for node in mlgo_graph.graph['nodes']:
+  for node in graph.graph['nodes']:
     output.append(create_single_layer(node.output, node.op, node.inputs))
 
   # assert : output is a list of go language lines for the defining layers of the nn
