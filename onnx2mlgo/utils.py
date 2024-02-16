@@ -57,9 +57,22 @@ def define_tensor(var_name: str,
     raise ValueError(f'shape size ({len(shape)}) does not match tensor variant ({tensor_variant})')
   return [f'{var_name} = ml.{tensor_variant}({ctx}, ml.{dtype}, {shape_argument})']
 
-def initialize_tensor(i: str, tensor_var_name: str, filename: str) -> List[str]:
-  output = []
-  output.append('f')
+def create_for_loop(
+  init_statement: types.Statement,
+  condition_statement: types.Statement,
+  post_statement: types.Statement,
+  loop_statements: List[types.Statement]
+) -> types.Statement:
+  return [f'''\
+for {init_statement}; {condition_statement}; {post_statement} {{
+  {indent_lines(loop_statements, 2)}
+}}
+''']
+
+def initialize_tensor(loop_var: str, tensor_var_name: str, filename: str) -> List[str]:
+  # TODO: create a codegen library for go
+  return create_for_loop(f'{loop_var} := 0', f'{loop_var} < len({tensor_var_name})', f'{loop_var}++',
+                         [f'{tensor_var_name}.Data[{loop_var}] = 0.412152'])
 
 def define_and_initialize_tensors(graph: Graph) -> List[str]:
   output = []

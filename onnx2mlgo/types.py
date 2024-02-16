@@ -1,6 +1,8 @@
 from typing import List, Literal
 
-Line = List[str] # A single line of code
+# TODO: Statement should most probably be a str instead of List[str]
+
+Statement = List[str] # A single statement of code (not necessarily a single line)
 
 Dtype = Literal[
   'TYPE_F32',
