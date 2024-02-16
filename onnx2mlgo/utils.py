@@ -14,30 +14,22 @@ last line of code.
   """
   output = ""
   spacing = ' ' * space_size
-  
   for i in range(len(code_list)):
     new_line = '\n' if i != (len(code_list)-1) else ''
     output += f'{spacing}{code_list[i]}{new_line}'
-    
   return output
 
 def create_single_layer(var_name: str, mlgo_op: str, input_list) -> str:
-
   # TODO: check whether the number of inputs are valid for the given mlgo_op
-  
   input_str = ', '.join(input_list)
   return f'{var_name} := ml.{mlgo_op}(ctx0, {input_str})'
 
 def create_layers(graph: Graph) -> List[str]:
-  
   output: List[str] = []
-
   # TODO: extend this for multi-path graphs
   for node in graph.nodes:
     output.append(create_single_layer(node.output, node.op, node.inputs))
-
   # assert : output is a list of go language lines for the defining layers of the nn
-  
   return output
 
 def shape_size(tensor_variant: types.TensorVariant):

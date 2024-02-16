@@ -41,22 +41,17 @@ class Graph:
   def __init__(self, onnx_graph):
     # TODO: make sure that the model is being correctly checked
     check_model(onnx_graph)
-
-    # properties
     self._nodes: List[Node] = []
     self._inputs = onnx_graph.graph.input # type List[Tensor]
     self._outputs = onnx_graph.graph.output # type List[Tensor]
     self._initializers = onnx_graph.graph.initializer # type List[Tensor]
-
     i = 1
     for onnx_node in onnx_graph.graph.node:
       # assert : self._graph is a complete graph with last output as last_output
       # assert : node takes in 1 input, x weights and has 1 output
       node_list = Node.create_node(onnx_node, i)
-      
       for node in node_list:
         self.add_node(node)
-
       i += 1
 
   @property
@@ -74,7 +69,7 @@ class Graph:
   @property
   def outputs(self):
     return self._outputs
-  
+
   def add_node(self, node):
     self._nodes.append(node)
         

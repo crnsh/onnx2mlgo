@@ -5,6 +5,7 @@ def create_go_boilerplate(file):
   """
   create imports and boilerplate.
   """
+
   file.write("""\
 package main
 
@@ -25,6 +26,7 @@ def create_model_utils(file):
   """
   create model utils.
   """
+
   file.write(
 """\
 func readFP32(file *os.File) float32 {
@@ -53,6 +55,7 @@ def create_hparams_type(file):
   e.g. - mnist_hparams
   """
   # TODO: is this correct? are any variables required here?
+
   file.write(f"""\
 type model_hparams struct{{
   n_input int32;
@@ -95,7 +98,6 @@ def create_weight_loading_func(file):
   create function to load model weights
   e.g. - mnist_model_load
   """
-
   # TODO: abstract layers programmatically.
 
   file.write(f"""\
@@ -183,10 +185,8 @@ def create_eval_func(file, graph: Graph):
   create function to evaluate model
   e.g. - mnist_eval
   """
-  
   layers = utils.create_layers(graph)
   tensor_initialization = utils.define_and_initialize_tensors(graph)
-  
   # TODO: create input tensor according to onnx
   # TODO: create fc's (layers) according to onnx
 
@@ -227,12 +227,10 @@ def create_main_func(file):
   create inference main function
   e.g. TestMNIST 
   """
-
   # TODO: decide which variables need to be here based on onnx
   # TODO: decide what to do with ml.SINGLE_THREAD
   # TODO: make sure that the model weights and inputs are accessed properly
   # TODO: make sure that the paths are relative to THIS file as opposed to the shell
-
   modelFile = "models/ggml-model-f32.bin"
   digitFile = "models/t10k-images.idx3-ubyte"
 
