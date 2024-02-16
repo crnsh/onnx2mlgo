@@ -1,5 +1,6 @@
 from typing import List, Literal
 from graph import Graph
+import re
 
 def indent_lines(code_list: List[str], space_size: int, tabs: bool = False):
   """Formats a `code_list` into a single string where each line is on a new line.\
@@ -56,16 +57,26 @@ TensorVariant = Literal[
   'NewTensor4D',
 ]
 
+def shape_size(tensor_variant: TensorVariant):
+  number = re.search(r'\d+', tensor_variant)
+  if number:
+    return int(number.group())
+  else:
+    raise ValueError(f'tensor variant ({tensor_variant}) does not indicate shape size')
+
 def define_tensor(var_name: str,
                   tensor_variant: TensorVariant,
                   ctx: str,
                   dtype: Dtype,
-                  shape: List[int],
-                  data: List):
-  pass
+                  shape: List[int]):
+  shape_argument = ', '.join([f'uint({dim})' for dim in shape])
+  if shape_size(tensor_variant) != len(shape):
+    raise ValueError(f'shape size ({len(shape)}) does not match tensor variant ({tensor_variant})')
+  return f'{var_name} = ml.{tensor_variant}({ctx}, ml.{dtype}, {shape_argument})'
 
 def define_and_initialize_tensors(graph: Graph) -> List[str]:
   output = []
+  # TODO: there are ml.NewTensor2DWithData type tensors. see if you can integrate them
   for initializer in graph.initializers:
     define_tensor(initializer)
     initialize_tensor(initializer)
