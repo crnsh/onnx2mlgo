@@ -30,7 +30,7 @@ def cli(onnx_path, output_dir):
   # TODO: remove model_name from the entire transpiler. this is not required and just adds additional complexity. make the name default to 'model' and write the model_name at the beginning as a comment
 
   onnx_model = onnx.load(Path(onnx_path))
-  mlgo_graph = Graph(onnx_model)
+  graph = Graph(onnx_model)
 
   mlgo_model_path = Path(output_dir)
   mlgo_model_path.mkdir(parents=True, exist_ok=True)
@@ -41,7 +41,7 @@ def cli(onnx_path, output_dir):
     writer.create_hparams_type(file)
     writer.create_model_type(file)
     writer.create_weight_loading_func(file)
-    writer.create_eval_func(file, mlgo_graph)
+    writer.create_eval_func(file, graph)
     writer.create_main_func(file)
     
   click.echo(click.style(f"Transpilation complete!", fg="green"))
