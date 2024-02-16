@@ -83,7 +83,5 @@ def define_and_initialize_tensors(graph: Graph) -> List[str]:
     output.append('') # new line
   for input in graph.inputs:
     pass
-
   # assert : output is a list of go language lines for defining and initializing the input and weight tensors
-
   return output
