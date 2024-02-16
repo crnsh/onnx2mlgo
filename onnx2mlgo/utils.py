@@ -26,9 +26,8 @@ def create_single_layer(output_var: str, mlgo_op: str, input_list) -> str:
   input_str = ', '.join(input_list)
   return f'{output_var} := ml.{mlgo_op}(ctx0, {input_str})'
 
-def create_layers(onnx) -> List[str]:
+def create_layers(graph: Graph) -> List[str]:
   
-  mlgo_graph = Graph(onnx)
   output: List[str] = []
 
   # TODO: extend this for multi-path graphs
@@ -39,7 +38,7 @@ def create_layers(onnx) -> List[str]:
   
   return output
 
-def initialize_tensors(onnx) -> List[str]:
+def initialize_tensors(graph: Graph) -> List[str]:
 
   # assert : output is a list of go language lines for defining and initializing the input and weight tensors
 

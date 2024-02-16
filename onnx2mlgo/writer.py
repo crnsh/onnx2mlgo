@@ -1,4 +1,5 @@
 import utils
+from graph import Graph
 
 def create_go_boilerplate(file):
   """
@@ -177,14 +178,14 @@ func model_load(fname string, model *model_struct) error {{
 """
   )
 
-def create_eval_func(file, onnx_model):
+def create_eval_func(file, graph: Graph):
   """
   create function to evaluate model
   e.g. - mnist_eval
   """
   
-  layers = utils.create_layers(onnx_model)
-  tensor_initialization = utils.initialize_tensors(onnx_model)
+  layers = utils.create_layers(graph)
+  tensor_initialization = utils.initialize_tensors(graph)
   
   # TODO: create input tensor according to onnx
   # TODO: create fc's (layers) according to onnx
