@@ -46,6 +46,7 @@ class Graph:
     self._nodes: List[Node] = []
     self._inputs = onnx_graph.graph.input # type List[Tensor]
     self._outputs = onnx_graph.graph.output # type List[Tensor]
+    self._initializers = onnx_graph.graph.initializer # type List[Tensor]
 
     i = 1
     for onnx_node in onnx_graph.graph.node:
@@ -65,6 +66,10 @@ class Graph:
   @property
   def inputs(self):
     return self._inputs
+
+  @property
+  def initializers(self):
+    return self._initializers
 
   @property
   def outputs(self):
