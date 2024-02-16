@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Literal
 from graph import Graph
 
 def indent_lines(code_list: List[str], space_size: int, tabs: bool = False):
@@ -19,12 +19,12 @@ last line of code.
     
   return output
 
-def create_single_layer(output_var: str, mlgo_op: str, input_list) -> str:
+def create_single_layer(var_name: str, mlgo_op: str, input_list) -> str:
 
   # TODO: check whether the number of inputs are valid for the given mlgo_op
   
   input_str = ', '.join(input_list)
-  return f'{output_var} := ml.{mlgo_op}(ctx0, {input_str})'
+  return f'{var_name} := ml.{mlgo_op}(ctx0, {input_str})'
 
 def create_layers(graph: Graph) -> List[str]:
   
@@ -38,8 +38,37 @@ def create_layers(graph: Graph) -> List[str]:
   
   return output
 
-def define_and_initialize_tensors(graph: Graph) -> List[str]:
+Dtype = Literal[
+  'TYPE_F32',
+  'TYPE_F16',
+  'TYPE_Q4_0',
+  'TYPE_Q4_1',
+  'TYPE_I8',
+  'TYPE_I16',
+  'TYPE_I32',
+  'TYPE_COUNT'
+]
 
+TensorVariant = Literal[
+  'NewTensor1D',
+  'NewTensor2D',
+  'NewTensor3D',
+  'NewTensor4D',
+]
+
+def define_tensor(var_name: str,
+                  tensor_variant: TensorVariant,
+                  ctx: str,
+                  dtype: Dtype,
+                  shape: List[int],
+                  data: List):
+  pass
+
+def define_and_initialize_tensors(graph: Graph) -> List[str]:
+  output = []
+  for initializer in graph.initializers:
+    define_tensor(initializer)
+    initialize_tensor(initializer)
   for input in graph.inputs:
     pass
 
