@@ -30,6 +30,7 @@ def cli(onnx_path, output_dir):
   # TODO: remove model_name from the entire transpiler. this is not required and just adds additional complexity. make the name default to 'model' and write the model_name at the beginning as a comment
 
   onnx_model = onnx.load(Path(onnx_path))
+  print(onnx_model)
   graph = Graph(onnx_model)
 
   mlgo_model_path = Path(output_dir)

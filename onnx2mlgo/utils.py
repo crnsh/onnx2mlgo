@@ -1,9 +1,9 @@
 from typing import List
 from graph import Graph
 import re
-from onnx2mlgo import types
+import custom_types
 
-def indent_lines(code_list: types.Statement, space_size: int, tabs: bool = False):
+def indent_lines(code_list: custom_types.Statement, space_size: int, tabs: bool = False):
   """Formats a `code_list` into a single string where each line is on a new line.\
 Each line has `space_size` spaces before each line. Doesn't add a new line to the\
 last line of code.
@@ -24,15 +24,15 @@ def create_single_layer(var_name: str, mlgo_op: str, input_list) -> str:
   input_str = ', '.join(input_list)
   return f'{var_name} := ml.{mlgo_op}(ctx0, {input_str})'
 
-def create_layers(graph: Graph) -> types.Statement:
-  output: types.Statement = []
+def create_layers(graph: Graph) -> custom_types.Statement:
+  output: custom_types.Statement = []
   # TODO: extend this for multi-path graphs
   for node in graph.nodes:
     output.append(create_single_layer(node.output, node.op, node.inputs))
   # assert : output is a list of go language lines for the defining layers of the nn
   return output
 
-def shape_size(tensor_variant: types.TensorVariant):
+def shape_size(tensor_variant: custom_types.TensorVariant):
   number = re.search(r'\d+', tensor_variant)
   if number:
     return int(number.group())
@@ -40,9 +40,9 @@ def shape_size(tensor_variant: types.TensorVariant):
     raise ValueError(f'tensor variant ({tensor_variant}) does not indicate shape size')
 
 def define_tensor(var_name: str,
-                  tensor_variant: types.TensorVariant,
+                  tensor_variant: custom_types.TensorVariant,
                   ctx: str,
-                  dtype: types.Dtype,
+                  dtype: custom_types.Dtype,
                   shape: List[int]):
   shape_argument = ', '.join([f'uint({dim})' for dim in shape])
   if shape_size(tensor_variant) != len(shape):
@@ -50,23 +50,23 @@ def define_tensor(var_name: str,
   return [f'{var_name} = ml.{tensor_variant}({ctx}, ml.{dtype}, {shape_argument})']
 
 def create_for_loop(
-  init_statement: types.Statement,
-  condition_statement: types.Statement,
-  post_statement: types.Statement,
-  loop_statements: List[types.Statement]
-) -> types.Statement:
+  init_statement: custom_types.Statement,
+  condition_statement: custom_types.Statement,
+  post_statement: custom_types.Statement,
+  loop_statements: List[custom_types.Statement]
+) -> custom_types.Statement:
   return [f'''\
 for {init_statement}; {condition_statement}; {post_statement} {{
   {indent_lines(loop_statements, 2)}
 }}
 ''']
 
-def initialize_tensor(loop_var: str, tensor_var_name: str, filename: str) -> types.Statement:
+def initialize_tensor(loop_var: str, tensor_var_name: str, filename: str) -> custom_types.Statement:
   # TODO: create a codegen library for go
   return create_for_loop(f'{loop_var} := 0', f'{loop_var} < len({tensor_var_name})', f'{loop_var}++',
                          [f'{tensor_var_name}.Data[{loop_var}] = 0.412152'])
 
-def define_and_initialize_tensors(graph: Graph) -> types.Statement:
+def define_and_initialize_tensors(graph: Graph) -> custom_types.Statement:
   output = []
   # TODO: there are ml.NewTensor2DWithData type tensors. see if you can integrate them
   for initializer in graph.initializers:
