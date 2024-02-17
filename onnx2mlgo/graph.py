@@ -1,13 +1,13 @@
 from onnx.checker import check_model
 from typing import List
 
-def clean_string(input: str):
+def clean_string(string: str):
   string = string.replace('.','_')
   string = string.replace('/','_')
   return string
 
 def clean_list(input: List[str]):
-  return map(clean_string, input)
+  return list(map(clean_string, input))
 
 class Node:
   def __init__(self, mlgo_op: str, inputs: List[str], output: str):
