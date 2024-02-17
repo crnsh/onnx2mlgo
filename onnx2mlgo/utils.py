@@ -85,13 +85,14 @@ def define_and_initialize_tensors(graph: Graph) -> custom_types.Statement:
   output = []
   # TODO: there are ml.NewTensor2DWithData type tensors. see if you can integrate them
   for initializer in graph.initializers:
+    name = clean_string(initializer.name)
     dims_length = len(initializer.dims)
     if dims_length in tensor_variants:
       tensor_variant = tensor_variants[dims_length]
     else:
       raise Exception(f'number of dims ({initializer.dims}) does not fit any tensor_variant')
-    output += define_tensor(clean_string(initializer.name), tensor_variant, 'nil', 'TYPE_F32', initializer.dims)
-    output += initialize_tensor('i', initializer.name)
+    output += define_tensor(name, tensor_variant, 'nil', 'TYPE_F32', initializer.dims)
+    output += initialize_tensor('i', name)
     output.append('') # new line
   for input in graph.inputs:
     pass
