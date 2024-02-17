@@ -98,3 +98,6 @@ def define_and_initialize_tensors(graph: Graph) -> custom_types.Statement:
     pass
   # assert : output is a list of go language lines for defining and initializing the input and weight tensors
   return output
+
+def get_assignment_target(line: str):
+  return line.partition(':=')[0].strip()
