@@ -3,6 +3,7 @@ from typing import List
 import utils
 
 class Node:
+  unsupported_ops: List[str] = []
   def __init__(self, mlgo_op: str, inputs: List[str], output: str):
     # TODO: add other necessary params as well
     self._op = mlgo_op
@@ -34,6 +35,7 @@ class Node:
     if len(onnx_node.output) > 1:
       raise NotImplementedError(f'onnx nodes with multiple outputs are currently not supported')
     if onnx_node.op_type == "Gemm":
+      # TODO: change i to a class attribute
       temp_output = f'temp{i}'
       # TODO: clean the inputs and outputs here so that they're valid go variables
       node1 = Node('MulMat', node_inputs[0:2], temp_output)
@@ -42,6 +44,10 @@ class Node:
     elif onnx_node.op_type == "Relu":
       node = Node('Relu', node_inputs, node_output)
       return [node]
+    else:
+      Node.unsupported_ops.append(onnx_node.op_type)
+      return []
+      # raise NotImplementedError(f'{onnx_node.op_type} has not been implemented yet.')
 
 class Graph:
   def __init__(self, onnx_graph):
@@ -59,6 +65,8 @@ class Graph:
       node_list = Node.create_node(onnx_node, i)
       for node in node_list:
         self.add_node(node)
+      if (len(Node.unsupported_ops) > 0):
+        raise NotImplementedError(f'Some operations {Node.unsupported_ops} are not currently supported.')
       i += 1
 
   @property
