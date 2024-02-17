@@ -1,14 +1,6 @@
 from onnx.checker import check_model
 from typing import List
 
-def clean_string(string: str):
-  string = string.replace('.','_')
-  string = string.replace('/','_')
-  return string
-
-def clean_list(input: List[str]):
-  return list(map(clean_string, input))
-
 class Node:
   def __init__(self, mlgo_op: str, inputs: List[str], output: str):
     # TODO: add other necessary params as well
@@ -36,8 +28,8 @@ class Node:
 
   @classmethod
   def create_node(cls, onnx_node, i: int) -> List:
-    node_inputs = clean_list(onnx_node.input)
-    node_output = clean_string(onnx_node.output[0])
+    node_inputs = utils.clean_list(onnx_node.input)
+    node_output = utils.clean_string(onnx_node.output[0])
     if len(onnx_node.output) > 1:
       raise NotImplementedError(f'onnx nodes with multiple outputs are currently not supported')
     if onnx_node.op_type == "Gemm":
@@ -53,6 +45,7 @@ class Node:
 class Graph:
   def __init__(self, onnx_graph):
     # TODO: make sure that the model is being correctly checked
+    # TODO: sanitize all strings in input, output and initializer
     check_model(onnx_graph)
     self._nodes: List[Node] = []
     self._inputs = onnx_graph.graph.input # type List[Tensor]

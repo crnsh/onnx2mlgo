@@ -19,6 +19,14 @@ last line of code.
     output += f'{spacing}{code_list[i]}{new_line}'
   return output
 
+def clean_string(string: str):
+  string = string.replace('.','_')
+  string = string.replace('/','_')
+  return string
+
+def clean_list(input: List[str]):
+  return list(map(clean_string, input))
+
 def create_single_layer(var_name: str, mlgo_op: str, input_list) -> str:
   # TODO: check whether the number of inputs are valid for the given mlgo_op
   input_str = ', '.join(input_list)
@@ -82,7 +90,7 @@ def define_and_initialize_tensors(graph: Graph) -> custom_types.Statement:
       tensor_variant = tensor_variants[dims_length]
     else:
       raise Exception(f'number of dims ({initializer.dims}) does not fit any tensor_variant')
-    output += define_tensor(initializer.name, tensor_variant, 'nil', 'TYPE_F32', initializer.dims)
+    output += define_tensor(clean_string(initializer.name), tensor_variant, 'nil', 'TYPE_F32', initializer.dims)
     output += initialize_tensor('i', initializer.name)
     output.append('') # new line
   for input in graph.inputs:
