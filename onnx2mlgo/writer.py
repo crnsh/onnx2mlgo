@@ -187,8 +187,11 @@ def create_eval_func(file, graph: Graph):
   """
   layers = utils.create_layers(graph)
   tensor_initialization = utils.define_and_initialize_tensors(graph)
+  # TODO: make sure this isn't hardcoded
+  output_name = 'output'
   # TODO: create input tensor according to onnx
   # TODO: create fc's (layers) according to onnx
+  # TODO: make sure that the final layer var name matches that of the remaining
 
   file.write(
   f"""\
@@ -205,14 +208,14 @@ func model_eval(model *model_struct, threadCount int, digit []float32) int {{
 {utils.indent_lines(layers, 2)}
 
   // run the computation
-  ml.BuildForwardExpand(&graph, final)
+  ml.BuildForwardExpand(&graph, {output_name})
   ml.GraphCompute(ctx0, &graph)
 
-  ml.PrintTensor(final, "final tensor")
+  ml.PrintTensor({output_name}, "final tensor")
 
   maxIndex := 0
   for i := 0; i < 10; i++{{
-    if final.Data[i] > final.Data[maxIndex] {{
+    if {output_name}.Data[i] > {output_name}.Data[maxIndex] {{
       maxIndex = i
     }}
   }}
