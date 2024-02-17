@@ -188,7 +188,6 @@ def create_eval_func(file, graph: Graph):
   layers = utils.create_layers(graph)
   tensor_initialization = utils.define_and_initialize_tensors(graph)
   output_name = utils.get_assignment_target(layers[-1])
-  print(output_name)
   # TODO: create input tensor according to onnx
   # TODO: create fc's (layers) according to onnx
   # TODO: make sure that the final layer var name matches that of the remaining
@@ -197,13 +196,13 @@ def create_eval_func(file, graph: Graph):
   f"""\
 func model_eval(model *model_struct, threadCount int, digit []float32) int {{
 
-{utils.indent_lines(tensor_initialization, 2)}
-
-  // input := ml.NewTensor1D(ctx0, ml.TYPE_F32, uint32(model.hparams.n_input))
-  // copy(input.Data, digit)
-
   ctx0 := &ml.Context{{}}
   graph := ml.Graph{{ThreadsCount: threadCount}}
+
+{utils.indent_lines(tensor_initialization, 2)}
+
+  input := ml.NewTensor1D(ctx0, ml.TYPE_F32, uint32(model.hparams.n_input))
+  copy(input.Data, digit)
 
 {utils.indent_lines(layers, 2)}
 
