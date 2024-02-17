@@ -1,9 +1,9 @@
 from onnx.checker import check_model
-from typing import List
+from typing import List, Set
 import utils
 
 class Node:
-  unsupported_ops: List[str] = []
+  unsupported_ops: Set[str] = set()
   def __init__(self, mlgo_op: str, inputs: List[str], output: str):
     # TODO: add other necessary params as well
     self._op = mlgo_op
@@ -32,20 +32,21 @@ class Node:
   def create_node(cls, onnx_node, i: int) -> List:
     node_inputs = utils.clean_list(onnx_node.input)
     node_output = utils.clean_string(onnx_node.output[0])
+    op = onnx_node.op_type
     if len(onnx_node.output) > 1:
       raise NotImplementedError(f'onnx nodes with multiple outputs are currently not supported')
-    if onnx_node.op_type == "Gemm":
+    if op == "Gemm":
       # TODO: change i to a class attribute
       temp_output = f'temp{i}'
       # TODO: clean the inputs and outputs here so that they're valid go variables
       node1 = Node('MulMat', node_inputs[0:2], temp_output)
       node2 = Node('Add', [temp_output, node_inputs[2]], node_output)
       return [node1, node2]
-    elif onnx_node.op_type == "Relu":
+    elif op == "Relu":
       node = Node('Relu', node_inputs, node_output)
       return [node]
     else:
-      Node.unsupported_ops.append(onnx_node.op_type)
+      Node.unsupported_ops.add(op) if op not in Node.unsupported_ops else None
       return []
       # raise NotImplementedError(f'{onnx_node.op_type} has not been implemented yet.')
 
