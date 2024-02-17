@@ -1,6 +1,14 @@
 from onnx.checker import check_model
 from typing import List
 
+def clean_string(input: str):
+  string = string.replace('.','_')
+  string = string.replace('/','_')
+  return string
+
+def clean_list(input: List[str]):
+  return map(clean_string, input)
+
 class Node:
   def __init__(self, mlgo_op: str, inputs: List[str], output: str):
     # TODO: add other necessary params as well
@@ -28,16 +36,18 @@ class Node:
 
   @classmethod
   def create_node(cls, onnx_node, i: int) -> List:
+    node_inputs = clean_list(onnx_node.input)
+    node_output = clean_string(onnx_node.output[0])
     if len(onnx_node.output) > 1:
       raise NotImplementedError(f'onnx nodes with multiple outputs are currently not supported')
     if onnx_node.op_type == "Gemm":
       temp_output = f'temp{i}'
       # TODO: clean the inputs and outputs here so that they're valid go variables
-      node1 = Node('MulMat', onnx_node.input[0:2], temp_output)
-      node2 = Node('Add', [temp_output, onnx_node.input[2]], onnx_node.output[0])
+      node1 = Node('MulMat', node_inputs[0:2], temp_output)
+      node2 = Node('Add', [temp_output, node_inputs[2]], node_output)
       return [node1, node2]
     elif onnx_node.op_type == "Relu":
-      node = Node('Relu', onnx_node.input, onnx_node.output[0])
+      node = Node('Relu', node_inputs, node_output)
       return [node]
 
 class Graph:
