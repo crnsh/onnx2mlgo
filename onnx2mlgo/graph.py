@@ -69,9 +69,9 @@ class Graph:
       node_list = Node.create_node(onnx_node, i)
       for node in node_list:
         self.add_node(node)
-      if (len(Node.unsupported_ops) > 0):
-        raise NotImplementedError(f'Some operations {Node.unsupported_ops} are not currently supported.')
       i += 1
+    if (len(Node.unsupported_ops) > 0):
+      raise NotImplementedError(f'Some operations {Node.unsupported_ops} are not currently supported.')
 
   @property
   def nodes(self):
