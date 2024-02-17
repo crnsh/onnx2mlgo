@@ -63,10 +63,9 @@ def create_for_loop(
   post_statement: custom_types.Statement,
   loop_statements: List[custom_types.Statement]
 ) -> custom_types.Statement:
-  return [f'''\
-for {init_statement}; {condition_statement}; {post_statement} {{
-  {indent_lines(loop_statements, 2)}
-}}''']
+  return [f'for {init_statement}; {condition_statement}; {post_statement} {{',
+          f'{indent_lines(loop_statements, 2)}',
+          f'}}']
 
 def initialize_tensor(loop_var: str, tensor_var_name: str, filename: str = '') -> custom_types.Statement:
   # TODO: create a codegen library for go
