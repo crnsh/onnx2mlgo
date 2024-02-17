@@ -2,6 +2,8 @@ from onnx.checker import check_model
 from typing import List, Set
 import utils
 
+EXIT_ON_UNSUPPORTED_OP = False
+
 class Node:
   unsupported_ops: Set[str] = set()
   def __init__(self, mlgo_op: str, inputs: List[str], output: str):
@@ -47,8 +49,9 @@ class Node:
       return [node]
     else:
       Node.unsupported_ops.add(op) if op not in Node.unsupported_ops else None
+      if EXIT_ON_UNSUPPORTED_OP:
+        raise NotImplementedError(f'{onnx_node.op_type} has not been implemented yet.')
       return []
-      # raise NotImplementedError(f'{onnx_node.op_type} has not been implemented yet.')
 
 class Graph:
   def __init__(self, onnx_graph):
