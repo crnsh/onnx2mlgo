@@ -1,5 +1,6 @@
 from onnx.checker import check_model
 from typing import List
+import utils
 
 class Node:
   def __init__(self, mlgo_op: str, inputs: List[str], output: str):
