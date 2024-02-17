@@ -52,7 +52,7 @@ def define_tensor(var_name: str,
                   ctx: str,
                   dtype: custom_types.Dtype,
                   shape: List[int]):
-  shape_argument = ', '.join([f'uint({dim})' for dim in shape])
+  shape_argument = ', '.join([f'uint32({dim})' for dim in shape])
   if shape_size(tensor_variant) != len(shape):
     raise ValueError(f'shape size ({len(shape)}) does not match tensor variant ({tensor_variant})')
   return [f'{var_name} := ml.{tensor_variant}({ctx}, ml.{dtype}, {shape_argument})']
