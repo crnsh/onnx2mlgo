@@ -39,8 +39,10 @@ def cli(onnx_path, output_dir):
 
   weight_file_folder = mlgo_model_path / Path('models') 
   weight_file_folder.mkdir(parents=True, exist_ok=True)
+  
+  weight_file = weight_file_folder / Path('model-weights-f32.bin')
 
-  with open(weight_file_folder / Path('model-weights-f32.bin'), 'wb') as file:
+  with open(weight_file, 'wb') as file:
     file.write(struct.pack('i', 0x6d6c676f))
     for initializer in graph.initializers:
       weight = onnx.numpy_helper.to_array(initializer)
