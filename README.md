@@ -22,8 +22,7 @@ If you find a bug, please [let me know](https://github.com/crnsh/onnx2mlgo/issue
 
 ## Installation
 ```bash
-git pull git@github.com:crnsh/onnx2mlgo.git
-cd onnx2mlgo
+git clone git@github.com:crnsh/onnx2mlgo.git
 git submodule update --init --recursive
 python3 -m pip install -r requirements.txt
 ```
