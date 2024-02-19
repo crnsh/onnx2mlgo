@@ -38,9 +38,6 @@ def cli(onnx_path, output_dir):
   with open(mlgo_model_path / 'test.go', 'w') as file:
     writer.create_go_boilerplate(file)
     writer.create_model_utils(file)
-    writer.create_hparams_type(file)
-    writer.create_model_type(file)
-    writer.create_weight_loading_func(file)
     writer.create_eval_func(file, graph)
     writer.create_main_func(file)
     

@@ -94,7 +94,18 @@ def define_and_initialize_tensors(graph: Graph) -> custom_types.Statement:
     output += initialize_tensor('i', name)
     output.append('') # new line
   for input in graph.inputs:
-    pass
+    name = clean_string(input.name)
+    x = filter(lambda x: type(x.dim_value) is int, input.type.tensor_type.shape.dim)
+    shape = str(input.type.tensor_type.shape.dim)
+    input_dims = [int(s) for s in shape.split() if s.isdigit()]
+    dims_length = len(input_dims)
+    if dims_length in tensor_variants:
+      tensor_variant = tensor_variants[dims_length]
+    else:
+      raise Exception(f'number of dims ({input_dims}) does not fit any tensor_variant')
+    output += define_tensor(name, tensor_variant, 'nil', 'TYPE_F32', input_dims)
+    output += initialize_tensor('i', name)
+    output.append('') # new line
   # assert : output is a list of go language lines for defining and initializing the input and weight tensors
   return output
 
