@@ -111,8 +111,11 @@ func main() {{
   
   model_weights_fname := "{model_weights_fname}"
   ml.SINGLE_THREAD = true
-  model_eval(model_weights_fname, 1)
-  
+  out := model_eval(model_weights_fname, 1)
+  if out != nil {{
+    fmt.Printf("%s\n", out)
+  }}
+
 }}
 """
   )
