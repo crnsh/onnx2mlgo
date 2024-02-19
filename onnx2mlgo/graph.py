@@ -33,8 +33,8 @@ class Node:
 
   @classmethod
   def create_node(cls, onnx_node) -> List:
-    node_inputs = utils.clean_list(onnx_node.input)
-    node_output = utils.clean_string(onnx_node.output[0])
+    node_inputs = utils.sanitize_list(onnx_node.input)
+    node_output = utils.sanitize_string(onnx_node.output[0])
     op = onnx_node.op_type
     if len(onnx_node.output) > 1:
       raise NotImplementedError(f'onnx nodes with multiple outputs are currently not supported')
@@ -42,7 +42,6 @@ class Node:
       # TODO: change i to a class attribute
       temp_output = f'temp{Node.temp_cnt}'
       Node.temp_cnt+=1
-      # TODO: clean the inputs and outputs here so that they're valid go variables
       node1 = Node('MulMat', node_inputs[0:2], temp_output)
       node2 = Node('Add', [temp_output, node_inputs[2]], node_output)
       return [node1, node2]

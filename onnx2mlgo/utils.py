@@ -19,13 +19,13 @@ last line of code.
     output += f'{spacing}{code_list[i]}{new_line}'
   return output
 
-def clean_string(string: str):
+def sanitize_string(string: str):
   string = string.replace('.','_')
   string = string.replace('/','_')
   return string
 
-def clean_list(input: List[str]):
-  return list(map(clean_string, input))
+def sanitize_list(input: List[str]):
+  return list(map(sanitize_string, input))
 
 def create_single_layer(var_name: str, mlgo_op: str, input_list) -> str:
   # TODO: check whether the number of inputs are valid for the given mlgo_op
@@ -84,7 +84,7 @@ def define_and_initialize_tensors(graph: Graph) -> custom_types.Statement:
   output = []
   # TODO: there are ml.NewTensor2DWithData type tensors. see if you can integrate them
   for initializer in graph.initializers:
-    name = clean_string(initializer.name)
+    name = sanitize_string(initializer.name)
     dims_length = len(initializer.dims)
     if dims_length in tensor_variants:
       tensor_variant = tensor_variants[dims_length]
@@ -94,7 +94,7 @@ def define_and_initialize_tensors(graph: Graph) -> custom_types.Statement:
     output += initialize_tensor('i', name)
     output.append('') # new line
   for input in graph.inputs:
-    name = clean_string(input.name)
+    name = sanitize_string(input.name)
     x = filter(lambda x: type(x.dim_value) is int, input.type.tensor_type.shape.dim)
     shape = str(input.type.tensor_type.shape.dim)
     input_dims = [int(s) for s in shape.split() if s.isdigit()]
