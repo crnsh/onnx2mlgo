@@ -42,7 +42,7 @@ class Node:
       # TODO: change i to a class attribute
       temp_output = f'temp{Node.temp_cnt}'
       Node.temp_cnt+=1
-      node1 = Node('MulMat', node_inputs[0:2], temp_output)
+      node1 = Node('MulMat', [node_inputs[1], node_inputs[0]], temp_output)
       node2 = Node('Add', [temp_output, node_inputs[2]], node_output)
       return [node1, node2]
     elif op == "Relu":
