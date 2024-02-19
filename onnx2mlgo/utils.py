@@ -20,19 +20,56 @@ last line of code.
   return output
 
 def sanitize_string(string: str):
+  """Sanitizes `string` so that it's a valid Go variable name 
+
+  Args:
+      string (str): Input string
+
+  Returns:
+      _type_: Sanitized string 
+  """
   string = string.replace('.','_')
   string = string.replace('/','_')
   return string
 
 def sanitize_list(input: List[str]):
+  """Sanitizes `input` list so all elements are valid Go variable names
+
+  Args:
+      input (List[str]): 
+
+  Returns:
+      _type_: Sanitized string
+  """
   return list(map(sanitize_string, input))
 
 def create_single_layer(var_name: str, mlgo_op: str, input_list) -> str:
+  """Creates a single MLGO operation.
+  
+  e.g. var_name = output, mlgo_op = MulMat, input_list = [tensor1, tensor2]
+  -> output := ml.MulMat(ctx0, tensor1, tensor2)
+
+  Args:
+      var_name (str): Variable name of output tensor
+      mlgo_op (str): Name of MLGO op (e.g. MulMat, Add, Relu)
+      input_list (_type_): List of variable names of input tensors
+
+  Returns:
+      str: Output line of Go code
+  """
   # TODO: check whether the number of inputs are valid for the given mlgo_op
   input_str = ', '.join(input_list)
   return f'{var_name} := ml.{mlgo_op}(ctx0, {input_str})'
 
 def create_layers(graph: Graph) -> custom_types.Statement:
+  """Creates a list of MLGO operations.
+
+  Args:
+      graph (Graph): MLGO graph
+
+  Returns:
+      custom_types.Statement: Output lines of Go code.
+  """
   output: custom_types.Statement = []
   # TODO: extend this for multi-path graphs
   for node in graph.nodes:
@@ -41,6 +78,16 @@ def create_layers(graph: Graph) -> custom_types.Statement:
   return output
 
 def shape_size(tensor_variant: custom_types.TensorVariant):
+  """Get the shape size of a tensor from it's tensor_variant
+  
+  e.g. NewTensor2D has shape size 2, NewTensor4D has shape size 4
+
+  Args:
+      tensor_variant (custom_types.TensorVariant)
+
+  Returns:
+      _type_
+  """
   number = re.search(r'\d+', tensor_variant)
   if number:
     return int(number.group())
@@ -52,6 +99,22 @@ def define_tensor(var_name: str,
                   ctx: str,
                   dtype: custom_types.Dtype,
                   shape: List[int]):
+  """Create Go tensor definition
+  
+  e.g. var_name = out, tensor_variant = NewTensor1D, ctx = ctx0, dtype = TYPE_F32, shape = [3, 10]
+  -> 
+  out := ml.NewTensor1D(ctx0, ml.TYPE_F32, uint32(3), uint32(10))
+
+  Args:
+      var_name (str)
+      tensor_variant (custom_types.TensorVariant)
+      ctx (str)
+      dtype (custom_types.Dtype)
+      shape (List[int])
+
+  Returns:
+      _type_
+  """
   shape_argument = ', '.join([f'uint32({dim})' for dim in shape])
   if shape_size(tensor_variant) != len(shape):
     raise ValueError(f'shape size ({len(shape)}) does not match tensor variant ({tensor_variant})')
@@ -63,6 +126,17 @@ def create_for_loop(
   post_statement: custom_types.Statement,
   loop_statements: List[custom_types.Statement]
 ) -> custom_types.Statement:
+  """Creates Go for loop
+
+  Args:
+      init_statement (custom_types.Statement)
+      condition_statement (custom_types.Statement)
+      post_statement (custom_types.Statement)
+      loop_statements (List[custom_types.Statement])
+
+  Returns:
+      custom_types.Statement
+  """
   return [f'for {init_statement}; {condition_statement}; {post_statement} {{',
           f'{indent_lines(loop_statements, 2)}',
           f'}}']
@@ -70,6 +144,16 @@ def create_for_loop(
 def initialize_tensor(loop_var: str, tensor_var_name: str, filename: str = '') -> custom_types.Statement:
   # TODO: create a codegen library for go
   # TODO: remove the {loop_var} param and replace it with a function that finds a loop_var not currently in use
+  """Creates tensor initialization Go statements 
+
+  Args:
+      loop_var (str)
+      tensor_var_name (str)
+      filename (str, optional). Defaults to ''.
+
+  Returns:
+      custom_types.Statement: _description_
+  """
   return create_for_loop(f'{loop_var} := 0', f'{loop_var} < len({tensor_var_name}.Data)', f'{loop_var}++',
                          [f'{tensor_var_name}.Data[{loop_var}] = readFP32(file)'])
 
