@@ -31,7 +31,7 @@ python3 -m pip install -r requirements.txt
 Make sure you have Go installed!
 
 ```bash
-python3 onnx2mlgo/transpiler.py tests/onnx_fc.onnx -o mlgo/dist
+python3 onnx2mlgo/transpiler.py tests/mnist_fc.onnx -o mlgo/dist
 cd mlgo/dist
 go run test.go
 ```
