@@ -90,6 +90,7 @@ def define_and_initialize_tensors(graph: Graph) -> custom_types.Statement:
       tensor_variant = tensor_variants[dims_length]
     else:
       raise Exception(f'number of dims ({initializer.dims}) does not fit any tensor_variant')
+    # TODO: initializer.dims[::-1] is a hack. might fail on some models. fix this.
     output += define_tensor(name, tensor_variant, 'nil', 'TYPE_F32', initializer.dims[::-1])
     output += initialize_tensor('i', name)
     output.append('') # new line
