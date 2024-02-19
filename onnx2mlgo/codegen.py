@@ -54,6 +54,7 @@ def create_eval_func(file, graph: Graph):
   layers = utils.create_layers(graph)
   tensor_initialization = utils.define_and_initialize_tensors(graph)
   output_name = utils.get_assignment_target(layers[-1])
+  magic = 0x6d6c676f
   # TODO: create input tensor according to onnx
   # TODO: create fc's (layers) according to onnx
   # TODO: make sure that the final layer var name matches that of the remaining
@@ -71,8 +72,8 @@ func model_eval(fname string, threadCount int) error {{
   //verify magic
   {{
     magic := readInt(file)
-    // 0x6D6C676F is mlgo in hex
-    if magic != 0x6D6C676F {{
+    // {magic} is mlgo in hex
+    if magic != {magic} {{
       return errors.New("invalid model file (bad magic)")
     }}
   }}
