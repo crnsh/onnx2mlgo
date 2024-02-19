@@ -1,8 +1,10 @@
 import codegen
 from pathlib import Path
-import onnx
+import onnx, onnx.numpy_helper
 import click
 from graph import Graph
+import struct
+
 
 @click.version_option("0.1.2", prog_name="onnx2mlgo")
 @click.command()
@@ -35,13 +37,20 @@ def cli(onnx_path, output_dir):
   mlgo_model_path = Path(output_dir)
   mlgo_model_path.mkdir(parents=True, exist_ok=True)
 
-  weight_file = 'model-weights-f32.bin'
+  weight_file = Path('models') / Path('model-weights-f32.bin')
+
+  with open(mlgo_model_path / weight_file, 'wb') as file:
+    file.write(struct.pack('i', 0x6d6c676f))
+    for initializer in graph.initializers:
+      weight = onnx.numpy_helper.to_array(initializer)
+      weight.astype(">f4")
+      weight.tofile(file)
 
   with open(mlgo_model_path / 'test.go', 'w') as file:
     codegen.create_go_boilerplate(file)
     codegen.create_model_utils(file)
     codegen.create_eval_func(file, graph)
-    codegen.create_main_func(file)
+    codegen.create_main_func(file, weight_file)
 
   click.echo(click.style(f"Transpilation complete!", fg="green"))
   click.echo(f"MLGO file created in {mlgo_model_path.absolute()}.")

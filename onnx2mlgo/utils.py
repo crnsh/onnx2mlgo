@@ -71,7 +71,7 @@ def initialize_tensor(loop_var: str, tensor_var_name: str, filename: str = '') -
   # TODO: create a codegen library for go
   # TODO: remove the {loop_var} param and replace it with a function that finds a loop_var not currently in use
   return create_for_loop(f'{loop_var} := 0', f'{loop_var} < len({tensor_var_name}.Data)', f'{loop_var}++',
-                         [f'{tensor_var_name}.Data[{loop_var}] = 0.412152'])
+                         [f'{tensor_var_name}.Data[{loop_var}] = readFP32(file)'])
 
 tensor_variants = {
     1: 'NewTensor1D',

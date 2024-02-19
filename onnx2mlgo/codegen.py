@@ -13,6 +13,7 @@ import (
   "math"
   "mlgo/ml"
   "os"
+  "errors"
 )
 
 """
@@ -59,7 +60,22 @@ def create_eval_func(file, graph: Graph):
 
   file.write(
   f"""\
-func model_eval(threadCount int) int {{
+func model_eval(fname string, threadCount int) error {{
+
+  file, err := os.Open(fname)
+  if err != nil {{
+    return err
+  }}
+  defer file.Close()
+
+  //verify magic
+  {{
+    magic := readInt(file)
+    // 0x6D6C676F is mlgo in hex
+    if magic != 0x6D6C676F {{
+      return errors.New("invalid model file (bad magic)")
+    }}
+  }}
 
   ctx0 := &ml.Context{{}}
   graph := ml.Graph{{ThreadsCount: threadCount}}
@@ -74,13 +90,13 @@ func model_eval(threadCount int) int {{
 
   ml.PrintTensor({output_name}, "final tensor")
 
-  return 0
+  return nil
 }}
 
 """
   )
 
-def create_main_func(file):
+def create_main_func(file, model_weights_fname):
   """
   create inference main function
   e.g. TestMNIST 
@@ -92,8 +108,9 @@ def create_main_func(file):
 f"""\
 func main() {{
   
+  model_weights_fname := "{model_weights_fname}"
   ml.SINGLE_THREAD = true
-  model_eval(1)
+  model_eval(model_weights_fname, 1)
   
 }}
 """
