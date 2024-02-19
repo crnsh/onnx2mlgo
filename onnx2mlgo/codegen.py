@@ -112,9 +112,9 @@ func main() {{
   
   model_weights_fname := "{model_weights_fname}"
   ml.SINGLE_THREAD = true
-  out := model_eval(model_weights_fname, 1)
-  if out != nil {{
-    fmt.Printf("%s\\n", out)
+  err := model_eval(model_weights_fname, 1)
+  if err != nil {{
+    fmt.Printf("error : %s\\n", err)
   }}
 
 }}
