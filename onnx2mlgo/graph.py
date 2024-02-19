@@ -6,6 +6,7 @@ EXIT_ON_UNSUPPORTED_OP = False
 
 class Node:
   unsupported_ops: Set[str] = set()
+  temp_cnt = 0
   def __init__(self, mlgo_op: str, inputs: List[str], output: str):
     # TODO: add other necessary params as well
     self._op = mlgo_op
@@ -31,7 +32,7 @@ class Node:
     return self._output
 
   @classmethod
-  def create_node(cls, onnx_node, i: int) -> List:
+  def create_node(cls, onnx_node) -> List:
     node_inputs = utils.clean_list(onnx_node.input)
     node_output = utils.clean_string(onnx_node.output[0])
     op = onnx_node.op_type
@@ -39,7 +40,8 @@ class Node:
       raise NotImplementedError(f'onnx nodes with multiple outputs are currently not supported')
     if op == "Gemm":
       # TODO: change i to a class attribute
-      temp_output = f'temp{i}'
+      temp_output = f'temp{Node.temp_cnt}'
+      Node.temp_cnt+=1
       # TODO: clean the inputs and outputs here so that they're valid go variables
       node1 = Node('MulMat', node_inputs[0:2], temp_output)
       node2 = Node('Add', [temp_output, node_inputs[2]], node_output)
@@ -62,14 +64,12 @@ class Graph:
     self._inputs = onnx_graph.graph.input # type List[Tensor]
     self._outputs = onnx_graph.graph.output # type List[Tensor]
     self._initializers = onnx_graph.graph.initializer # type List[Tensor]
-    i = 1
     for onnx_node in onnx_graph.graph.node:
       # assert : self._graph is a complete graph with last output as last_output
       # assert : node takes in 1 input, x weights and has 1 output
-      node_list = Node.create_node(onnx_node, i)
+      node_list = Node.create_node(onnx_node)
       for node in node_list:
         self.add_node(node)
-      i += 1
     if (len(Node.unsupported_ops) > 0):
       raise NotImplementedError(f'Some operations {Node.unsupported_ops} are not currently supported.')
 
