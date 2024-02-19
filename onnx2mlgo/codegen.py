@@ -13,6 +13,7 @@ import (
   "math"
   "mlgo/ml"
   "os"
+  "fmt"
   "errors"
 )
 
@@ -113,7 +114,7 @@ func main() {{
   ml.SINGLE_THREAD = true
   out := model_eval(model_weights_fname, 1)
   if out != nil {{
-    fmt.Printf("%s\n", out)
+    fmt.Printf("%s\\n", out)
   }}
 
 }}
