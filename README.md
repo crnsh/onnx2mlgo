@@ -1,6 +1,7 @@
 <div align="center">
   <img src="https://github.com/crnsh/onnx2mlgo/assets/79533543/a7c3c0e1-277d-4079-b827-7ae2fb566493" width=500>
 </div>
+<hr>
 
 onnx2mlgo is an ONNX to MLGO transpiler.
 
