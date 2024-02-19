@@ -23,8 +23,15 @@ If you find a bug, please [let me know](https://github.com/crnsh/onnx2mlgo/issue
 ## Installation
 ```bash
 git pull git@github.com:crnsh/onnx2mlgo.git
+git submodule update --init --recursive
 cd onnx2mlgo
 python3 -m pip install -r requirements.txt
+```
+
+For subsequent updates to the `mlgo` library, use the following command.
+
+```bash
+git submodule update --recursive --remote
 ```
 
 ## Usage
