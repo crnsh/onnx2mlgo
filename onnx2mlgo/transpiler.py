@@ -49,7 +49,7 @@ def cli(onnx_path, output_dir):
       weight.astype(">f4")
       weight.tofile(file)
 
-  with open(mlgo_model_path / 'test.go', 'w') as file:
+  with open(mlgo_model_path / 'model.go', 'w') as file:
     codegen.create_go_boilerplate(file)
     codegen.create_model_utils(file)
     codegen.create_eval_func(file, graph)
