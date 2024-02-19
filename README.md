@@ -1,14 +1,32 @@
-# CLI Transpilation from ONNX to MLGO
+<div align="center">
+  <img src="https://github.com/crnsh/onnx2mlgo/assets/79533543/a7c3c0e1-277d-4079-b827-7ae2fb566493" width=500>
+</div>
 
-Transpiles ONNX files to MLGO files. MLGO is tensor library for machine learning in pure Golang that can run on MIPS. 
+onnx2mlgo is an ONNX to MLGO transpiler.
 
-The machine learning part of this project refers to the legendary [ggml.cpp](https://github.com/ggerganov/ggml) framework.
+Features:
+* Single CLI command to output Go files
+* Compatibility Checker shows all missing operators
+* Go code generator
 
-Located in `onnx2mlgo`.
+Currently this transpiler only transpiles a limited number of models. The CLI tells you which operations are missing and need to be implemented. Also, only ONNX models with initialized weights are supported.
 
-1. `cd onnx2mlgo`
-2. `python3 transpiler.py`
+You will have to manually import the input data in the generated Go file.
 
-## Build
+If you find a bug, please [let me know](https://github.com/crnsh/onnx2mlgo/issues)!
 
-`pip install -r requirements.txt`
+## Installation
+```bash
+git pull git@github.com:crnsh/onnx2mlgo.git
+cd onnx2mlgo
+python3 -m pip install -r requirements.txt
+```
+
+## Usage
+Make sure you have Go installed!
+
+```bash
+python3 onnx2mlgo/transpiler.py tests/onnx_fc.onnx -o mlgo/dist
+cd mlgo/dist
+go run test.go
+```
