@@ -1,18 +1,18 @@
 <div align="center">
   <img src="https://github.com/crnsh/onnx2mlgo/assets/79533543/a7c3c0e1-277d-4079-b827-7ae2fb566493" width=500>
 </div>
-<hr>
 <p align="center">
   <img src="https://img.shields.io/github/commit-activity/t/crnsh/onnx2mlgo">
   <img src="https://img.shields.io/badge/Working-green">
 <p/>
+<hr>
 
-onnx2mlgo is an ONNX to MLGO transpiler.
+**onnx2mlgo** is an ONNX to MLGO transpiler.
 
 Features:
 * Single CLI command to output Go files
 * Compatibility Checker shows all missing operators
-* Go code generator
+* Code generator
 
 Currently this transpiler only transpiles a limited number of models. The CLI tells you which operations are missing and need to be implemented. Also, only ONNX models with initialized weights are supported.
 
