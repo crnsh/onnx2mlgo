@@ -73,6 +73,8 @@ func model_eval(threadCount int) int {{
   ml.GraphCompute(ctx0, &graph)
 
   ml.PrintTensor({output_name}, "final tensor")
+
+  return 0
 }}
 
 """
@@ -91,7 +93,7 @@ f"""\
 func main() {{
   
   ml.SINGLE_THREAD = true
-  res := model_eval(1)
+  model_eval(1)
   
 }}
 """
