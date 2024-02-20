@@ -110,17 +110,6 @@ def create_for_loop(
   post_statement: custom_types.Statement,
   loop_statements: List[custom_types.Statement]
 ) -> custom_types.Statement:
-  """Creates Go for loop
-
-  Args:
-      init_statement (custom_types.Statement)
-      condition_statement (custom_types.Statement)
-      post_statement (custom_types.Statement)
-      loop_statements (List[custom_types.Statement])
-
-  Returns:
-      custom_types.Statement
-  """
   return [f'for {init_statement}; {condition_statement}; {post_statement} {{',
           f'{indent_lines(loop_statements, 2)}',
           f'}}']
@@ -128,16 +117,6 @@ def create_for_loop(
 def initialize_tensor(loop_var: str, tensor_var_name: str, filename: str = '') -> custom_types.Statement:
   # TODO: create a codegen library for go
   # TODO: remove the {loop_var} param and replace it with a function that finds a loop_var not currently in use
-  """Creates tensor initialization Go statements 
-
-  Args:
-      loop_var (str)
-      tensor_var_name (str)
-      filename (str, optional). Defaults to ''.
-
-  Returns:
-      custom_types.Statement: _description_
-  """
   return create_for_loop(f'{loop_var} := 0', f'{loop_var} < len({tensor_var_name}.Data)', f'{loop_var}++',
                          [f'{tensor_var_name}.Data[{loop_var}] = readFP32(file)'])
 
