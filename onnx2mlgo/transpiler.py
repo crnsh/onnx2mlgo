@@ -5,7 +5,6 @@ import click
 from graph import Graph
 import struct
 
-
 @click.version_option("0.1.2", prog_name="onnx2mlgo")
 @click.command()
 @click.argument(
@@ -42,6 +41,7 @@ def cli(onnx_path, output_dir):
   
   weight_file = weight_file_folder / Path('model-weights-f32.bin')
 
+  # create model weight file
   with open(weight_file, 'wb') as file:
     file.write(struct.pack('i', 0x6d6c676f))
     for initializer in graph.initializers:
@@ -49,6 +49,7 @@ def cli(onnx_path, output_dir):
       weight.astype(">f4")
       weight.tofile(file)
 
+  # create go file
   with open(mlgo_model_path / 'model.go', 'w') as file:
     codegen.create_go_boilerplate(file)
     codegen.create_model_utils(file)
