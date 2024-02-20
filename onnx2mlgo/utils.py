@@ -33,14 +33,6 @@ def sanitize_string(string: str):
   return string
 
 def sanitize_list(input: List[str]):
-  """Sanitizes `input` list so all elements are valid Go variable names
-
-  Args:
-      input (List[str]): 
-
-  Returns:
-      _type_: Sanitized string
-  """
   return list(map(sanitize_string, input))
 
 def create_single_layer(var_name: str, mlgo_op: str, input_list) -> str:
@@ -62,14 +54,6 @@ def create_single_layer(var_name: str, mlgo_op: str, input_list) -> str:
   return f'{var_name} := ml.{mlgo_op}(ctx0, {input_str})'
 
 def create_layers(graph: Graph) -> custom_types.Statement:
-  """Creates a list of MLGO operations.
-
-  Args:
-      graph (Graph): MLGO graph
-
-  Returns:
-      custom_types.Statement: Output lines of Go code.
-  """
   output: custom_types.Statement = []
   # TODO: extend this for multi-path graphs
   for node in graph.nodes:
@@ -180,7 +164,6 @@ def define_and_initialize_tensors(graph: Graph) -> custom_types.Statement:
     output.append('') # new line
   for input in graph.inputs:
     name = sanitize_string(input.name)
-    x = filter(lambda x: type(x.dim_value) is int, input.type.tensor_type.shape.dim)
     shape = str(input.type.tensor_type.shape.dim)
     input_dims = [int(s) for s in shape.split() if s.isdigit()]
     dims_length = len(input_dims)
