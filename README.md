@@ -101,6 +101,20 @@ func main() {
 }
 ```
 
+Update imports.
+```go
+import (
+  "math"
+  "math/rand"
+  "time"
+  "mlgo/ml"
+  "os"
+  "fmt"
+  "errors"
+)
+
+```
+
 Paste the MNIST input from the `mlgo` submodule to `dist/models`.
 ```bash
 cp ../examples/mnist/models/mnist/t10k-images.idx3-ubyte models/
