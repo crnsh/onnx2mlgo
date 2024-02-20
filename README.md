@@ -14,9 +14,9 @@ Features:
 * Compatibility Checker shows all missing operators
 * Code generator
 
-Currently this transpiler only transpiles a limited number of models. The CLI tells you which operations are missing and need to be implemented. Also, only ONNX models with initialized weights are supported.
+Currently this transpiler only transpiles a limited number of models. The CLI tells you which operations are missing and need to be implemented. Only ONNX models with initialized weights are supported.
 
-You will have to manually import the input data in the generated Go file.
+You will have to manually import input data in the generated Go file.
 
 If you find a bug, please [let me know](https://github.com/crnsh/onnx2mlgo/issues)!
 
