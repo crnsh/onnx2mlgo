@@ -12,8 +12,6 @@ package main
 
 import (
   "math"
-  "math/rand"
-  "time"
   "mlgo/ml"
   "os"
   "fmt"
