@@ -120,7 +120,7 @@ Paste the MNIST input from the `mlgo` submodule to `dist/models`.
 cp ../examples/mnist/models/mnist/t10k-images.idx3-ubyte models/
 ```
 
-Run the `model.go` file
+Run the `model.go` file.
 ```bash
 go run model.go
 ```
