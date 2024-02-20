@@ -26,10 +26,6 @@ import struct
   default="dist",
 )
 def cli(onnx_path, output_dir):
-  # TODO: make sure that model_name is a valid file_name
-  # TODO: get rid of everything that isn't required in this repository
-  # TODO: remove model_name from the entire transpiler. this is not required and just adds additional complexity. make the name default to 'model' and write the model_name at the beginning as a comment
-
   onnx_model = onnx.load(Path(onnx_path))
   graph = Graph(onnx_model)
 
