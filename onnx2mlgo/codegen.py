@@ -55,7 +55,7 @@ def create_eval_func(file, graph: Graph):
   layers = utils.create_layers(graph)
   tensor_initialization = utils.define_and_initialize_tensors(graph)
   output_name = utils.get_assignment_target(layers[-1])
-  magic = 0x6d6c676f
+  magic = '0x6d6c676f'
   # TODO: create input tensor according to onnx
   # TODO: create fc's (layers) according to onnx
   # TODO: make sure that the final layer var name matches that of the remaining
