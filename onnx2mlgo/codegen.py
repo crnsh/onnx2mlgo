@@ -1,7 +1,7 @@
 import utils
 from graph import Graph
 
-def create_go_boilerplate(file):
+def create_go_boilerplate_and_model_utils(file):
   """
   create imports and boilerplate.
   """
@@ -17,16 +17,6 @@ import (
   "errors"
 )
 
-"""
-  )
-
-def create_model_utils(file):
-  """
-  create model utils.
-  """
-
-  file.write(
-"""\
 func readFP32(file *os.File) float32 {
   buf := make([]byte, 4)
   if count, err := file.Read(buf); err != nil || count != 4 {

@@ -47,8 +47,7 @@ def cli(onnx_path, output_dir):
 
   # create go file
   with open(mlgo_model_path / 'model.go', 'w') as file:
-    codegen.create_go_boilerplate(file)
-    codegen.create_model_utils(file)
+    codegen.create_go_boilerplate_and_model_utils(file)
     codegen.create_eval_func(file, graph)
     codegen.create_main_func(file, weight_file.absolute())
 
