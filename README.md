@@ -45,7 +45,7 @@ cd mlgo/dist
 go run model.go
 ```
 
-To check whether the MNIST model works as expected, replace the `main` function of the transpiled `model.go` with the following `main` function
+To check whether the MNIST model works as expected, replace the `main` function of the transpiled `model.go` with the following `main` function.
 ```go
 func main() {
 
