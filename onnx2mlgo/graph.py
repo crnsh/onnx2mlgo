@@ -8,13 +8,11 @@ class Node:
   unsupported_ops: Set[str] = set()
   temp_cnt = 0
   def __init__(self, mlgo_op: str, inputs: List[str], output: str):
-    # TODO: add other necessary params as well
     self._op = mlgo_op
     self._inputs = inputs
     self._output = output
     self._input_first = True
 
-  # TODO: figure out this whole _input_first thing
   @property
   def input_first(self):
     return self._input_first
@@ -39,7 +37,6 @@ class Node:
     if len(onnx_node.output) > 1:
       raise NotImplementedError(f'onnx nodes with multiple outputs are currently not supported')
     if op == "Gemm":
-      # TODO: change i to a class attribute
       temp_output = f'temp{Node.temp_cnt}'
       Node.temp_cnt+=1
       node1 = Node('MulMat', [node_inputs[1], node_inputs[0]], temp_output)
@@ -56,8 +53,7 @@ class Node:
 
 class Graph:
   def __init__(self, onnx_graph):
-    # TODO: make sure that the model is being correctly checked
-    # TODO: sanitize all strings in input, output and initializer
+    # TODO: sanitize all strings in input, output and initializer. might need to create separate classes for input, initializers and output
     check_model(onnx_graph)
     self._nodes: List[Node] = []
     self._inputs = onnx_graph.graph.input # type List[Tensor]
