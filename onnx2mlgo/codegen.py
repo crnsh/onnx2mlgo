@@ -54,11 +54,12 @@ def create_eval_func(file, graph: Graph, input_data_var):
 
   file.write(
   f"""\
-func model_eval(fname string, threadCount int, {input_data_var} []float32) error {{
+func model_eval(fname string, threadCount int, {input_data_var} []float32) *ml.Tensor {{
 
   file, err := os.Open(fname)
   if err != nil {{
-    return err
+    fmt.Println(err)
+    os.Exit(1)
   }}
   defer file.Close()
 
@@ -67,7 +68,8 @@ func model_eval(fname string, threadCount int, {input_data_var} []float32) error
     magic := readInt(file)
     // {magic} is mlgo in hex
     if magic != {magic} {{
-      return errors.New("invalid model file (bad magic)")
+      fmt.Println(errors.New("invalid model file (bad magic)"))
+      os.Exit(1)
     }}
   }}
 
@@ -82,9 +84,7 @@ func model_eval(fname string, threadCount int, {input_data_var} []float32) error
   ml.BuildForwardExpand(&graph, {output_name})
   ml.GraphCompute(ctx0, &graph)
 
-  ml.PrintTensor({output_name}, "final tensor")
-
-  return nil
+  return {output_name}
 }}
 
 """
@@ -109,10 +109,9 @@ func main() {{
   ml.SINGLE_THREAD = true
 
   {input_data_var} := make([]float32, {input_data_shape_args})
-  err := model_eval(model_weights_fname, 1, {input_data_var})
-  if err != nil {{
-    fmt.Printf("error : %s\\n", err)
-  }}
+  output_tensor := model_eval(model_weights_fname, 1, {input_data_var})
+
+  ml.PrintTensor(output_tensor, "final tensor")
 
 }}
 """
