@@ -137,7 +137,6 @@ tensor_variants = {
 
 def define_and_initialize_tensors(graph: Graph, input_data_var: str) -> custom_types.Statement:
   output = []
-  # TODO: there are ml.NewTensor2DWithData type tensors. see if you can integrate them
   for initializer in graph.initializers:
     name = sanitize_string(initializer.name)
     dims_length = len(initializer.dims)

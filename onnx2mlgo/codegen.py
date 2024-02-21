@@ -47,9 +47,6 @@ def create_eval_func(file, graph: Graph, input_data_var):
   tensor_initialization = utils.define_and_initialize_tensors(graph, input_data_var)
   layers = utils.create_layers(graph)
   output_name = utils.get_assignment_target(layers[-1])
-  # TODO: create input tensor according to onnx
-  # TODO: create fc's (layers) according to onnx
-  # TODO: make sure that the final layer var name matches that of the remaining
   # TODO: add dtype to inputData
 
   file.write(
@@ -95,7 +92,6 @@ def create_main_func(file, model_weights_fname, input_data_var, input_data_shape
   create inference main function
   e.g. TestMNIST 
   """
-  # TODO: make sure that the model weights and inputs are accessed properly
   # TODO: make sure that the paths are relative to THIS file as opposed to the shell
   # TODO: make []float32 not hardcoded
 
