@@ -18,7 +18,7 @@ Currently this transpiler only transpiles a limited number of models. The CLI te
 
 You will have to manually import input data in the generated Go file.
 
-If you find a bug, please [let me know](https://github.com/crnsh/onnx2mlgo/issues)!
+If you find a bug, please [let me know](https://github.com/crnsh/onnx2mlgo/issues).
 
 ## Installation
 ```bash
