@@ -51,12 +51,25 @@ class Node:
         raise NotImplementedError(f'{onnx_node.op_type} has not been implemented yet.')
       return []
 
+class Input:
+  def __init__(self, onnx_input):
+    self._name = utils.sanitize_string(onnx_input.name)
+    self._type = onnx_input.type
+
+  @property
+  def name(self):
+    return self._name
+
+  @property
+  def type(self):
+    return self._type
+
 class Graph:
   def __init__(self, onnx_graph):
     # TODO: sanitize all strings in input, output and initializer. might need to create separate classes for input, initializers and output
     check_model(onnx_graph)
     self._nodes: List[Node] = []
-    self._inputs = onnx_graph.graph.input # type List[Tensor]
+    self._inputs: List[Input] = [] # type List[Tensor]
     self._outputs = onnx_graph.graph.output # type List[Tensor]
     self._initializers = onnx_graph.graph.initializer # type List[Tensor]
     for onnx_node in onnx_graph.graph.node:
@@ -65,6 +78,8 @@ class Graph:
       node_list = Node.create_node(onnx_node)
       for node in node_list:
         self.add_node(node)
+    for onnx_input in onnx_graph.graph.input:
+      self._inputs.append(Input(onnx_input))
     if (len(Node.unsupported_ops) > 0):
       raise NotImplementedError(f'Some operations {Node.unsupported_ops} are not currently supported.')
 
