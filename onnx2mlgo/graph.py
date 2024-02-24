@@ -64,6 +64,11 @@ class Input:
   def type(self):
     return self._type
 
+  def get_shape(self):
+    shape = str(self.type.tensor_type.shape.dim)
+    input_dims = [int(s) for s in shape.split() if s.isdigit()]
+    return input_dims
+
 class Graph:
   def __init__(self, onnx_graph):
     # TODO: sanitize all strings in input, output and initializer. might need to create separate classes for input, initializers and output

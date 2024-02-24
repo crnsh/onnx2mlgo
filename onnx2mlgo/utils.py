@@ -61,11 +61,6 @@ def create_layers(graph: Graph) -> custom_types.Statement:
   # assert : output is a list of go language lines for the defining layers of the nn
   return output
 
-def get_shape_from_input(input):
-  shape = str(input.type.tensor_type.shape.dim)
-  input_dims = [int(s) for s in shape.split() if s.isdigit()]
-  return input_dims
-
 def get_shape_size(tensor_variant: custom_types.TensorVariant):
   """Get the shape size of a tensor from it's tensor_variant
   
@@ -150,7 +145,7 @@ def define_and_initialize_tensors(graph: Graph, input_data_var: str) -> custom_t
     output.append('') # new line
   for input in graph.inputs:
     name = sanitize_string(input.name)
-    input_dims = get_shape_from_input(input)
+    input_dims = input.get_shape()
     dims_length = len(input_dims)
     if dims_length in tensor_variants:
       tensor_variant = tensor_variants[dims_length]

@@ -49,7 +49,7 @@ def cli(onnx_path, output_dir):
   # create go file
   with open(mlgo_model_path / 'model.go', 'w') as file:
     # TODO: currently supports single input tensor (input tensors aren't weights). extend this later
-    input_data_shape = utils.get_shape_from_input(graph.inputs[0])
+    input_data_shape = graph.inputs[0].get_shape()
     input_data_var = 'inputData'
     codegen.create_go_boilerplate_and_model_utils(file)
     codegen.create_eval_func(file, graph, input_data_var)
