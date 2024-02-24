@@ -133,7 +133,7 @@ tensor_variants = {
 def define_and_initialize_tensors(graph: Graph, input_data_var: str) -> custom_types.Statement:
   output = []
   for initializer in graph.initializers:
-    name = sanitize_string(initializer.name)
+    name = initializer.name
     input_rank = len(initializer.dims)
     if input_rank in tensor_variants:
       tensor_variant = tensor_variants[input_rank]

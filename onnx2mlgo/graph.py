@@ -69,14 +69,37 @@ class Input:
     input_dims = [int(s) for s in shape.split() if s.isdigit()]
     return input_dims
 
+class Initializer:
+  def __init__(self, onnx_initializer):
+    self._dims = onnx_initializer.dims
+    self._data_type = onnx_initializer.data_type
+    self._name = utils.sanitize_string(onnx_initializer.name)
+    self._raw_data = onnx_initializer.raw_data
+
+  @property
+  def dims(self):
+    return self._dims
+
+  @property
+  def data_type(self):
+    return self._data_type
+
+  @property
+  def name(self):
+    return self._name
+
+  @property
+  def raw_data(self):
+    return self._raw_data
+
 class Graph:
   def __init__(self, onnx_graph):
     # TODO: sanitize all strings in input, output and initializer. might need to create separate classes for input, initializers and output
     check_model(onnx_graph)
     self._nodes: List[Node] = []
     self._inputs: List[Input] = [] # type List[Tensor]
+    self._initializers: List[Initializer] = [] # type List[Tensor]
     self._outputs = onnx_graph.graph.output # type List[Tensor]
-    self._initializers = onnx_graph.graph.initializer # type List[Tensor]
     for onnx_node in onnx_graph.graph.node:
       # assert : self._graph is a complete graph with last output as last_output
       # assert : node takes in 1 input, x weights and has 1 output
@@ -85,6 +108,8 @@ class Graph:
         self.add_node(node)
     for onnx_input in onnx_graph.graph.input:
       self._inputs.append(Input(onnx_input))
+    for onnx_initializer in onnx_graph.graph.initializer:
+      self._initializers.append(Initializer(onnx_initializer))
     if (len(Node.unsupported_ops) > 0):
       raise NotImplementedError(f'Some operations {Node.unsupported_ops} are not currently supported.')
 

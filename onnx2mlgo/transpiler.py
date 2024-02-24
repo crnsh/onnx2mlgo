@@ -41,7 +41,7 @@ def cli(onnx_path, output_dir):
   # create model weight file
   with open(weight_file, 'wb') as file:
     file.write(struct.pack('i', 0x6d6c676f))
-    for initializer in graph.initializers:
+    for initializer in onnx_model.graph.initializer:
       weight = onnx.numpy_helper.to_array(initializer)
       weight.astype(">f4")
       weight.tofile(file)
