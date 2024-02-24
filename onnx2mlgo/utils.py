@@ -134,9 +134,9 @@ def define_and_initialize_tensors(graph: Graph, input_data_var: str) -> custom_t
   output = []
   for initializer in graph.initializers:
     name = sanitize_string(initializer.name)
-    dims_length = len(initializer.dims)
-    if dims_length in tensor_variants:
-      tensor_variant = tensor_variants[dims_length]
+    input_rank = len(initializer.dims)
+    if input_rank in tensor_variants:
+      tensor_variant = tensor_variants[input_rank]
     else:
       raise Exception(f'number of dims ({initializer.dims}) does not fit any tensor_variant')
     # TODO: initializer.dims[::-1] is a hack. might fail on some models. fix this.
@@ -145,13 +145,13 @@ def define_and_initialize_tensors(graph: Graph, input_data_var: str) -> custom_t
     output.append('') # new line
   for input in graph.inputs:
     name = sanitize_string(input.name)
-    input_dims = input.get_shape()
-    dims_length = len(input_dims)
-    if dims_length in tensor_variants:
-      tensor_variant = tensor_variants[dims_length]
+    input_shape = input.get_shape()
+    input_rank = len(input_shape)
+    if input_rank in tensor_variants:
+      tensor_variant = tensor_variants[input_rank]
     else:
-      raise Exception(f'number of dims ({input_dims}) does not fit any tensor_variant')
-    output += define_tensor(name, tensor_variant, 'nil', 'TYPE_F32', input_dims)
+      raise Exception(f'number of dims ({input_shape}) does not fit any tensor_variant')
+    output += define_tensor(name, tensor_variant, 'nil', 'TYPE_F32', input_shape)
     output += initialize_tensor_copy(name, input_data_var)
   # assert : output is a list of go language lines for defining and initializing the input and weight tensors
   return output
