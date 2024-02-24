@@ -144,7 +144,7 @@ def define_and_initialize_tensors(graph: Graph, input_data_var: str) -> custom_t
     output += initialize_tensor_for_loop('i', name)
     output.append('') # new line
   for input in graph.inputs:
-    name = sanitize_string(input.name)
+    name = input.name
     input_shape = input.get_shape()
     input_rank = len(input_shape)
     if input_rank in tensor_variants:
