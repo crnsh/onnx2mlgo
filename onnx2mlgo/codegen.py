@@ -38,7 +38,7 @@ func readInt(file *os.File) uint32 {
 """
   )
 
-def create_eval_func(file, graph: Graph, input_data_var):
+def create_eval_func(file, graph: Graph, input_data_var: str, input_dtype: str):
   """
   create function to evaluate model
   e.g. - mnist_eval
@@ -51,7 +51,7 @@ def create_eval_func(file, graph: Graph, input_data_var):
 
   file.write(
   f"""\
-func model_eval(fname string, threadCount int, {input_data_var} []float32) *ml.Tensor {{
+func model_eval(fname string, threadCount int, {input_data_var} []{input_dtype}) *ml.Tensor {{
 
   file, err := os.Open(fname)
   if err != nil {{
@@ -87,13 +87,12 @@ func model_eval(fname string, threadCount int, {input_data_var} []float32) *ml.T
 """
   )
 
-def create_main_func(file, model_weights_fname, input_data_var, input_data_shape):
+def create_main_func(file, model_weights_fname, input_data_var, input_data_shape, input_dtype: str):
   """
   create inference main function
   e.g. TestMNIST 
   """
   # TODO: make sure that the paths are relative to THIS file as opposed to the shell
-  # TODO: make []float32 not hardcoded
 
   input_data_shape_args = reduce(lambda x,y: x*y, input_data_shape)
 
@@ -104,7 +103,7 @@ func main() {{
   model_weights_fname := "{model_weights_fname}"
   ml.SINGLE_THREAD = true
 
-  {input_data_var} := make([]float32, {input_data_shape_args})
+  {input_data_var} := make([]{input_dtype}, {input_data_shape_args})
   output_tensor := model_eval(model_weights_fname, 1, {input_data_var})
 
   ml.PrintTensor(output_tensor, "final tensor")

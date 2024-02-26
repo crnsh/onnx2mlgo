@@ -51,9 +51,10 @@ def cli(onnx_path, output_dir):
     # TODO: currently supports single input tensor (input tensors aren't weights). extend this later
     input_data_shape = graph.inputs[0].get_shape()
     input_data_var = 'inputData'
+    input_dtype = 'float32'
     codegen.create_go_boilerplate_and_model_utils(file)
-    codegen.create_eval_func(file, graph, input_data_var)
-    codegen.create_main_func(file, weight_file.absolute(), input_data_var, input_data_shape)
+    codegen.create_eval_func(file, graph, input_data_var, input_dtype)
+    codegen.create_main_func(file, weight_file.absolute(), input_data_var, input_data_shape, input_dtype)
 
   click.echo(click.style(f"Transpilation complete!", fg="green"))
   click.echo(f"MLGO file created in {mlgo_model_path.absolute()}.")
