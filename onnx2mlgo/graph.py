@@ -36,17 +36,20 @@ class Node:
     op = onnx_node.op_type
     if len(onnx_node.output) > 1:
       raise NotImplementedError(f'onnx nodes with multiple outputs are currently not supported')
-    if op == "Gemm":
+    if op == 'Gemm':
       temp_output = f'temp{Node.temp_cnt}'
       Node.temp_cnt+=1
       node1 = Node('MulMat', [node_inputs[1], node_inputs[0]], temp_output)
       node2 = Node('Add', [temp_output, node_inputs[2]], node_output)
       return [node1, node2]
-    elif op == "Relu":
+    elif op == 'Relu':
       node = Node('Relu', node_inputs, node_output)
       return [node]
-    elif op == "Mul":
+    elif op == 'Mul':
       node = Node('Mul', node_inputs, node_output)
+      return [node]
+    elif op == 'Softmax':
+      node = Node('SoftMax', node_inputs, node_output)
       return [node]
     else:
       Node.unsupported_ops.add(op) if op not in Node.unsupported_ops else None
