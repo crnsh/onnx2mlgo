@@ -51,6 +51,11 @@ class Node:
     elif op == 'Softmax':
       node = Node('SoftMax', node_inputs, node_output)
       return [node]
+    elif op == 'Add':
+      node = Node('Add', node_inputs, node_output)
+      return [node]
+    elif op == 'Sub':
+      node = Node('Sub', node_inputs, node_output)
     else:
       Node.unsupported_ops.add(op) if op not in Node.unsupported_ops else None
       if EXIT_ON_UNSUPPORTED_OP:
