@@ -45,6 +45,9 @@ class Node:
     elif op == "Relu":
       node = Node('Relu', node_inputs, node_output)
       return [node]
+    elif op == "Mul":
+      node = Node('Mul', node_inputs, node_output)
+      return [node]
     else:
       Node.unsupported_ops.add(op) if op not in Node.unsupported_ops else None
       if EXIT_ON_UNSUPPORTED_OP:
