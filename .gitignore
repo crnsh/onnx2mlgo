@@ -2,3 +2,5 @@ onnx2mlgo/__pycache__
 onnx2mlgo/dist
 dist/
 mlgo/dist
+tests/*/
+tests/llama2.onnx
