@@ -2,12 +2,14 @@ import utils
 from graph import Graph
 from functools import reduce
 
-def create_go_boilerplate_and_model_utils(file):
-  """
-  create imports and boilerplate.
-  """
 
-  file.write("""\
+def create_go_boilerplate_and_model_utils(file):
+    """
+    create imports and boilerplate.
+    """
+
+    file.write(
+        """\
 package main
 
 import (
@@ -36,21 +38,22 @@ func readInt(file *os.File) uint32 {
 }
 
 """
-  )
+    )
+
 
 def create_eval_func(file, graph: Graph, input_data_var: str, input_dtype: str):
-  """
-  create function to evaluate model
-  e.g. - mnist_eval
-  """
-  magic = '0x6d6c676f'
-  tensor_initialization = utils.define_and_initialize_tensors(graph, input_data_var)
-  layers = utils.create_layers(graph)
-  output_name = utils.get_assignment_target(layers[-1])
-  # TODO: add dtype to inputData
+    """
+    create function to evaluate model
+    e.g. - mnist_eval
+    """
+    magic = "0x6d6c676f"
+    tensor_initialization = utils.define_and_initialize_tensors(graph, input_data_var)
+    layers = utils.create_layers(graph)
+    output_name = utils.get_assignment_target(layers[-1])
+    # TODO: add dtype to inputData
 
-  file.write(
-  f"""\
+    file.write(
+        f"""\
 func model_eval(fname string, threadCount int, {input_data_var} []{input_dtype}) *ml.Tensor {{
 
   file, err := os.Open(fname)
@@ -85,19 +88,22 @@ func model_eval(fname string, threadCount int, {input_data_var} []{input_dtype})
 }}
 
 """
-  )
+    )
 
-def create_main_func(file, model_weights_fname, input_data_var, input_data_shape, input_dtype: str):
-  """
-  create inference main function
-  e.g. TestMNIST 
-  """
-  # TODO: make sure that the paths are relative to THIS file as opposed to the shell
 
-  input_data_shape_args = reduce(lambda x,y: x*y, input_data_shape)
+def create_main_func(
+    file, model_weights_fname, input_data_var, input_data_shape, input_dtype: str
+):
+    """
+    create inference main function
+    e.g. TestMNIST
+    """
+    # TODO: make sure that the paths are relative to THIS file as opposed to the shell
 
-  file.write(
-f"""\
+    input_data_shape_args = reduce(lambda x, y: x * y, input_data_shape)
+
+    file.write(
+        f"""\
 func main() {{
   
   model_weights_fname := "{model_weights_fname}"
@@ -110,4 +116,4 @@ func main() {{
 
 }}
 """
-  )
+    )
