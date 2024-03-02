@@ -69,6 +69,12 @@ def create_layers(graph: Graph) -> custom_types.Statement:
     return output
 
 
+def get_shape_from_shape_proto(shape_proto):
+    dims = str(shape_proto.dim)
+    shape = [int(s) for s in dims.split() if s.isdigit()]
+    return shape
+
+
 def get_shape_size(tensor_variant: custom_types.TensorVariant):
     """Get the shape size of a tensor from it's tensor_variant
 

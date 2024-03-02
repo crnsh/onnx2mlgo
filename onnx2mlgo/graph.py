@@ -100,9 +100,8 @@ class Input:
         return self._type
 
     def get_shape(self):
-        shape = str(self.type.tensor_type.shape.dim)
-        input_dims = [int(s) for s in shape.split() if s.isdigit()]
-        return input_dims
+        shape = utils.get_shape_from_shape_proto(self.type.tensor_type.shape)
+        return shape
 
 
 class Initializer:
