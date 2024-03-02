@@ -32,7 +32,7 @@ class Node:
         return self._output
 
     @classmethod
-    def create_node(cls, onnx_node) -> List:
+    def create_node(cls, onnx_node, onnx_model) -> List:
         node_inputs = utils.sanitize_list(onnx_node.input)
         node_output = utils.sanitize_string(onnx_node.output[0])
         op = onnx_node.op_type
@@ -130,22 +130,22 @@ class Initializer:
 
 
 class Graph:
-    def __init__(self, onnx_graph):
+    def __init__(self, onnx_model):
         # TODO: sanitize all strings in input, output and initializer. might need to create separate classes for input, initializers and output
-        check_model(onnx_graph)
+        check_model(onnx_model)
         self._nodes: List[Node] = []
         self._inputs: List[Input] = []  # type List[Tensor]
         self._initializers: List[Initializer] = []  # type List[Tensor]
-        self._outputs = onnx_graph.graph.output  # type List[Tensor]
-        for onnx_node in onnx_graph.graph.node:
+        self._outputs = onnx_model.graph.output  # type List[Tensor]
+        for onnx_node in onnx_model.graph.node:
             # assert : self._graph is a complete graph with last output as last_output
             # assert : node takes in 1 input, x weights and has 1 output
-            node_list = Node.create_node(onnx_node)
+            node_list = Node.create_node(onnx_node, onnx_model)
             for node in node_list:
                 self.add_node(node)
-        for onnx_input in onnx_graph.graph.input:
+        for onnx_input in onnx_model.graph.input:
             self._inputs.append(Input(onnx_input))
-        for onnx_initializer in onnx_graph.graph.initializer:
+        for onnx_initializer in onnx_model.graph.initializer:
             self._initializers.append(Initializer(onnx_initializer))
         if len(Node.unsupported_ops) > 0:
             raise NotImplementedError(
