@@ -42,20 +42,37 @@ class Node:
       node1 = Node('MulMat', [node_inputs[1], node_inputs[0]], temp_output)
       node2 = Node('Add', [temp_output, node_inputs[2]], node_output)
       return [node1, node2]
-    elif op == 'Relu':
-      node = Node('Relu', node_inputs, node_output)
-      return [node]
-    elif op == 'Mul':
-      node = Node('Mul', node_inputs, node_output)
-      return [node]
-    elif op == 'Softmax':
-      node = Node('SoftMax', node_inputs, node_output)
-      return [node]
+
+    # Binary Ops
+
     elif op == 'Add':
       node = Node('Add', node_inputs, node_output)
       return [node]
     elif op == 'Sub':
       node = Node('Sub', node_inputs, node_output)
+      return [node]
+    elif op == 'Mul':
+      node = Node('Mul', node_inputs, node_output)
+      return [node]
+    elif op == 'Div':
+      node = Node('Div', node_inputs, node_output)
+      return [node]
+    elif op == 'Pow':
+      node = Node('Pow', node_inputs, node_output)
+      return [node]
+
+    # Unary Ops
+    elif op == 'Sqrt':
+      node = Node('Sqrt', node_inputs, node_output)
+      return [node]
+    elif op == 'Relu':
+      node = Node('Relu', node_inputs, node_output)
+      return [node]
+    elif op == 'Softmax':
+      node = Node('SoftMax', node_inputs, node_output)
+      return [node]
+    elif op == 'Erf':
+      node = Node('Erf', node_inputs, node_output)
       return [node]
     else:
       Node.unsupported_ops.add(op) if op not in Node.unsupported_ops else None
