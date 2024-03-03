@@ -1,4 +1,5 @@
 from onnx.checker import check_model
+from onnx import numpy_helper
 from typing import List, Set
 import utils
 
@@ -64,7 +65,46 @@ class Node:
         elif op == "Pow":
             node = Node("Pow", node_inputs, node_output)
             return [node]
+        elif op == "MatMul":
+            node = Node("MulMat", node_inputs, node_output)
+            return [node]
+
         # Unary Ops
+        elif op == "Constant":
+            # for some reason, shape inference does not consistently work on constants, so all this code is just trying to figure out the shape of the other inputs
+            # TODO: write a better comment for this
+            op_inputs = None
+            for node in onnx_model.graph.node:
+                if onnx_node.output[0] in node.input:
+                    # print(onnx_node.output[0], node.input)
+                    op_inputs = node.input
+
+            inputs_excluding_constant = list(
+                filter(lambda x: x != onnx_node.output[0], op_inputs)
+            )
+            if len(inputs_excluding_constant) > 1:
+                raise NotImplementedError(
+                    "Constants are only supported with binary ops."
+                )
+            other_input = inputs_excluding_constant[0]
+            for shape_info in onnx_model.graph.value_info:
+                if shape_info.name == other_input:
+                    shape = utils.get_shape_from_shape_proto(
+                        shape_info.type.tensor_type.shape
+                    )
+
+            rank = len(shape)
+            tensor_variant = utils.tensor_variants[rank]
+            tensor_def = utils.define_tensor(
+                node_output, tensor_variant, "nil", "TYPE_F32", shape
+            )
+            if len(onnx_node.attribute) > 1:
+                raise NotImplementedError("More than a single attribute not supported")
+            const_val = numpy_helper.to_array(onnx_node.attribute[0].t)
+            tensor_init = utils.initialize_const_tensor_for_loop(
+                "i", node_output, const_val
+            )
+            return [tensor_def, tensor_init]
         elif op == "Sqrt":
             node = Node("Sqrt", node_inputs, node_output)
             return [node]

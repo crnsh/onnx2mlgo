@@ -152,6 +152,19 @@ def initialize_tensor_for_loop(
     )
 
 
+def initialize_const_tensor_for_loop(
+    loop_var: str, tensor_var_name: str, value: float
+) -> custom_types.Statement:
+    # TODO: create a codegen library for go
+    # TODO: remove the {loop_var} param and replace it with a function that finds a loop_var not currently in use
+    return create_go_for_loop(
+        f"{loop_var} := 0",
+        f"{loop_var} < len({tensor_var_name}.Data)",
+        f"{loop_var}++",
+        [f"{tensor_var_name}.Data[{loop_var}] = float32({value})"],
+    )
+
+
 def initialize_tensor_copy(tensor_name: str, data_name: str):
     return [f"copy({tensor_name}.Data, {data_name})"]
 

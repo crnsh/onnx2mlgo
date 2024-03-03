@@ -29,8 +29,9 @@ import struct
 )
 def cli(onnx_path, output_dir):
     onnx_model = onnx.load(Path(onnx_path))
+    onnx_model_with_shapes = onnx.shape_inference.infer_shapes(onnx_model)
 
-    graph = Graph(onnx_model)
+    graph = Graph(onnx_model_with_shapes)
 
     mlgo_model_path = Path(output_dir)
     mlgo_model_path.mkdir(parents=True, exist_ok=True)
@@ -43,7 +44,7 @@ def cli(onnx_path, output_dir):
     # create model weight file
     with open(weight_file, "wb") as file:
         file.write(struct.pack("i", 0x6D6C676F))
-        for initializer in onnx_model.graph.initializer:
+        for initializer in onnx_model_with_shapes.graph.initializer:
             weight = onnx.numpy_helper.to_array(initializer)
             weight.astype(">f4")
             weight.tofile(file)
